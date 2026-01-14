@@ -18,6 +18,63 @@ define( 'THREE_TO_FIVE_DIR', get_template_directory() );
 define( 'THREE_TO_FIVE_URI', get_template_directory_uri() );
 
 /**
+ * Custom Customizer Control: TinyMCE WYSIWYG Editor
+ */
+if ( class_exists( 'WP_Customize_Control' ) ) {
+    class Three_To_Five_WYSIWYG_Control extends WP_Customize_Control {
+        /**
+         * Control type
+         *
+         * @var string
+         */
+        public $type = 'wysiwyg';
+
+        /**
+         * Enqueue scripts and styles
+         */
+        public function enqueue() {
+            wp_enqueue_editor();
+            wp_enqueue_script(
+                '3to5-customizer-wysiwyg',
+                THREE_TO_FIVE_URI . '/assets/js/customizer-wysiwyg.js',
+                array( 'jquery', 'customize-controls' ),
+                THREE_TO_FIVE_VERSION,
+                true
+            );
+            wp_enqueue_style(
+                '3to5-customizer-wysiwyg',
+                THREE_TO_FIVE_URI . '/assets/css/customizer-wysiwyg.css',
+                array(),
+                THREE_TO_FIVE_VERSION
+            );
+        }
+
+        /**
+         * Render the control content
+         */
+        public function render_content() {
+            ?>
+            <label>
+                <?php if ( ! empty( $this->label ) ) : ?>
+                    <span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
+                <?php endif; ?>
+                <?php if ( ! empty( $this->description ) ) : ?>
+                    <span class="description customize-control-description"><?php echo esc_html( $this->description ); ?></span>
+                <?php endif; ?>
+                <div class="wysiwyg-editor-control">
+                    <textarea
+                        id="<?php echo esc_attr( $this->id ); ?>"
+                        class="wysiwyg-editor"
+                        <?php $this->link(); ?>
+                    ><?php echo esc_textarea( $this->value() ); ?></textarea>
+                </div>
+            </label>
+            <?php
+        }
+    }
+}
+
+/**
  * Theme setup
  */
 function three_to_five_setup() {
@@ -297,17 +354,16 @@ function three_to_five_customize_register( $wp_customize ) {
         'type'    => 'text',
     ) );
 
-    // About Content
+    // About Content (WYSIWYG Editor)
     $wp_customize->add_setting( '3to5_about_content', array(
         'default'           => __( 'Lewis County has grown significantly over the years, but our County Commission has remained at just three members. By expanding to five commissioners, we can ensure better representation for all residents, bring more diverse perspectives to local government, and improve transparency in decision-making.', '3to5' ),
         'sanitize_callback' => 'wp_kses_post',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
-    $wp_customize->add_control( '3to5_about_content', array(
+    $wp_customize->add_control( new Three_To_Five_WYSIWYG_Control( $wp_customize, '3to5_about_content', array(
         'label'   => __( 'Content', '3to5' ),
         'section' => '3to5_about',
-        'type'    => 'textarea',
-    ) );
+    ) ) );
 
     // About Image
     $wp_customize->add_setting( '3to5_about_image', array(

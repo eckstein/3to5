@@ -1,0 +1,83 @@
+/**
+ * 3 to 5 Theme - Customizer WYSIWYG Styles
+ *
+ * @package 3to5
+ */
+
+/* WYSIWYG Editor Container */
+.wysiwyg-editor-control {
+    margin-top: 8px;
+}
+
+.wysiwyg-editor-control .wysiwyg-editor {
+    width: 100%;
+    min-height: 150px;
+}
+
+/* TinyMCE Container in Customizer */
+.wysiwyg-editor-control .mce-tinymce {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.wysiwyg-editor-control .mce-tinymce.mce-container {
+    width: 100% !important;
+}
+
+.wysiwyg-editor-control .mce-edit-area {
+    border-top: 1px solid #ddd;
+}
+
+.wysiwyg-editor-control .mce-edit-area iframe {
+    min-height: 150px;
+}
+
+/* Toolbar Styling */
+.wysiwyg-editor-control .mce-toolbar-grp {
+    background: #f7f7f7;
+    border-bottom: 1px solid #ddd;
+    padding: 4px;
+}
+
+.wysiwyg-editor-control .mce-btn {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.wysiwyg-editor-control .mce-btn:hover,
+.wysiwyg-editor-control .mce-btn:focus {
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+.wysiwyg-editor-control .mce-btn.mce-active {
+    background: #0073aa;
+    border-radius: 3px;
+}
+
+.wysiwyg-editor-control .mce-btn.mce-active .mce-ico {
+    color: #fff;
+}
+
+/* Ensure proper sizing in the customizer panel */
+#customize-controls .wysiwyg-editor-control .mce-tinymce {
+    max-width: 100%;
+}
+
+/* Fix for TinyMCE 5+ */
+.wysiwyg-editor-control .tox-tinymce {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.wysiwyg-editor-control .tox .tox-toolbar-overlord,
+.wysiwyg-editor-control .tox .tox-toolbar__primary {
+    background: #f7f7f7;
+}
+
+.wysiwyg-editor-control .tox .tox-edit-area__iframe {
+    min-height: 150px;
+}

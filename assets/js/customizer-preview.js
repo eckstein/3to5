@@ -56,14 +56,7 @@
         });
     });
 
-    wp.customize('3to5_about_content', function(value) {
-        value.bind(function(newval) {
-            // Convert newlines to paragraphs
-            var html = '<p>' + newval.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
-            $('.about .about__content h2').nextAll('p').remove();
-            $('.about .about__content h2').after(html);
-        });
-    });
+    // Note: About content uses 'refresh' transport due to WYSIWYG editor
 
     // =========================================================================
     // Reasons Section
