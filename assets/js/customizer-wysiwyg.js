@@ -27,11 +27,11 @@
                 return;
             }
 
-            // Initialize TinyMCE (WordPress uses TinyMCE 4.x)
+            // Initialize TinyMCE
             tinymce.init({
                 selector: '#' + textareaId,
                 menubar: false,
-                toolbar: 'bold italic underline | bullist numlist | customlink unlink | removeformat',
+                toolbar: 'bold italic underline | bullist numlist | insertlink removelink | removeformat',
                 plugins: 'lists',
                 branding: false,
                 elementpath: false,
@@ -39,76 +39,39 @@
                 height: 200,
                 content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; line-height: 1.6; } a { color: #0073aa; }',
                 setup: function(editor) {
-                    // Custom link button using TinyMCE 4.x API
-                    editor.addButton('customlink', {
+                    // Insert link button using simple prompt
+                    editor.addButton('insertlink', {
                         icon: 'link',
-                        tooltip: 'Insert/Edit Link',
+                        tooltip: 'Insert Link',
                         onclick: function() {
                             var selectedText = editor.selection.getContent({ format: 'text' });
-                            var selectedNode = editor.selection.getNode();
-                            var existingHref = '';
-                            var existingTarget = '';
-
-                            // Check if we're inside an existing link
-                            if (selectedNode.nodeName === 'A') {
-                                existingHref = selectedNode.getAttribute('href') || '';
-                                existingTarget = selectedNode.getAttribute('target') || '';
-                                if (!selectedText) {
-                                    selectedText = selectedNode.textContent;
+                            
+                            // Prompt for URL
+                            var url = prompt('Enter the URL:', 'https://');
+                            
+                            if (url && url !== 'https://') {
+                                // Prompt for link text if none selected
+                                var linkText = selectedText;
+                                if (!linkText) {
+                                    linkText = prompt('Enter link text:', url);
+                                    if (!linkText) {
+                                        linkText = url;
+                                    }
                                 }
+                                
+                                // Insert the link
+                                var linkHtml = '<a href="' + url + '">' + linkText + '</a>';
+                                editor.insertContent(linkHtml);
                             }
+                        }
+                    });
 
-                            // Open custom dialog using TinyMCE 4.x windowManager
-                            editor.windowManager.open({
-                                title: 'Insert Link',
-                                width: 400,
-                                height: 150,
-                                body: [
-                                    {
-                                        type: 'textbox',
-                                        name: 'url',
-                                        label: 'URL',
-                                        value: existingHref,
-                                        placeholder: 'https://example.com'
-                                    },
-                                    {
-                                        type: 'textbox',
-                                        name: 'text',
-                                        label: 'Link Text',
-                                        value: selectedText
-                                    },
-                                    {
-                                        type: 'checkbox',
-                                        name: 'newwindow',
-                                        label: 'Open in new window',
-                                        checked: existingTarget === '_blank'
-                                    }
-                                ],
-                                onsubmit: function(e) {
-                                    var url = e.data.url;
-                                    var text = e.data.text || url;
-                                    var target = e.data.newwindow ? ' target="_blank" rel="noopener noreferrer"' : '';
-
-                                    if (url) {
-                                        // If editing existing link
-                                        if (selectedNode.nodeName === 'A') {
-                                            selectedNode.setAttribute('href', url);
-                                            if (e.data.newwindow) {
-                                                selectedNode.setAttribute('target', '_blank');
-                                                selectedNode.setAttribute('rel', 'noopener noreferrer');
-                                            } else {
-                                                selectedNode.removeAttribute('target');
-                                                selectedNode.removeAttribute('rel');
-                                            }
-                                            selectedNode.textContent = text;
-                                        } else {
-                                            // Insert new link
-                                            var linkHtml = '<a href="' + url + '"' + target + '>' + text + '</a>';
-                                            editor.insertContent(linkHtml);
-                                        }
-                                    }
-                                }
-                            });
+                    // Remove link button
+                    editor.addButton('removelink', {
+                        icon: 'unlink',
+                        tooltip: 'Remove Link',
+                        onclick: function() {
+                            editor.execCommand('unlink');
                         }
                     });
 
@@ -134,7 +97,6 @@
 
     /**
      * Re-initialize editors when sections are expanded
-     * This handles cases where the editor wasn't visible initially
      */
     wp.customize.section('3to5_about', function(section) {
         section.expanded.bind(function(isExpanded) {
@@ -146,7 +108,6 @@
                     if (!editor) {
                         initWysiwygEditors();
                     } else {
-                        // Refresh the editor if it exists
                         editor.fire('focus');
                     }
                 }, 100);
