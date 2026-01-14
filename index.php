@@ -235,8 +235,10 @@ if ( $action_bg ) {
             );
 
             for ( $i = 1; $i <= 3; $i++ ) :
-                $title = get_theme_mod( "3to5_step_{$i}_title", $default_steps[ $i ]['title'] );
-                $text  = get_theme_mod( "3to5_step_{$i}_text", $default_steps[ $i ]['text'] );
+                $title    = get_theme_mod( "3to5_step_{$i}_title", $default_steps[ $i ]['title'] );
+                $text     = get_theme_mod( "3to5_step_{$i}_text", $default_steps[ $i ]['text'] );
+                $btn_text = get_theme_mod( "3to5_step_{$i}_btn_text", '' );
+                $btn_link = get_theme_mod( "3to5_step_{$i}_btn_link", '' );
 
                 if ( $title && $text ) :
             ?>
@@ -244,6 +246,11 @@ if ( $action_bg ) {
                     <div class="action-step__number" aria-hidden="true"><?php echo esc_html( $i ); ?></div>
                     <h3 class="action-step__title"><?php echo esc_html( $title ); ?></h3>
                     <p class="action-step__text"><?php echo esc_html( $text ); ?></p>
+                    <?php if ( $btn_text && $btn_link ) : ?>
+                        <a href="<?php echo esc_url( $btn_link ); ?>" class="btn btn--action-step">
+                            <?php echo esc_html( $btn_text ); ?>
+                        </a>
+                    <?php endif; ?>
                 </div>
             <?php
                 endif;

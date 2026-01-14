@@ -628,6 +628,28 @@ function three_to_five_customize_register( $wp_customize ) {
             'section' => '3to5_action',
             'type'    => 'textarea',
         ) );
+
+        $wp_customize->add_setting( "3to5_step_{$i}_btn_text", array(
+            'default'           => '',
+            'sanitize_callback' => 'sanitize_text_field',
+            'transport'         => 'refresh',
+        ) );
+        $wp_customize->add_control( "3to5_step_{$i}_btn_text", array(
+            'label'   => sprintf( __( 'Step %d Button Text', '3to5' ), $i ),
+            'section' => '3to5_action',
+            'type'    => 'text',
+        ) );
+
+        $wp_customize->add_setting( "3to5_step_{$i}_btn_link", array(
+            'default'           => '',
+            'sanitize_callback' => 'esc_url_raw',
+            'transport'         => 'refresh',
+        ) );
+        $wp_customize->add_control( "3to5_step_{$i}_btn_link", array(
+            'label'   => sprintf( __( 'Step %d Button Link', '3to5' ), $i ),
+            'section' => '3to5_action',
+            'type'    => 'url',
+        ) );
     }
 
     // Set default steps

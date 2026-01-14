@@ -541,7 +541,27 @@ img {
 
 .action-step__text {
     opacity: 0.9;
-    margin-bottom: 0;
+    margin-bottom: var(--spacing-sm);
+}
+
+.btn--action-step {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+    border: 2px solid var(--color-secondary);
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: var(--spacing-xs);
+}
+
+.btn--action-step:hover,
+.btn--action-step:focus {
+    background-color: transparent;
+    color: var(--color-secondary);
 }
 
 /* ==========================================================================
