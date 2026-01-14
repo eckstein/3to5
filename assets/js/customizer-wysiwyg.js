@@ -27,7 +27,7 @@
                 return;
             }
 
-            // Initialize TinyMCE
+            // Initialize TinyMCE (WordPress uses TinyMCE 4.x)
             tinymce.init({
                 selector: '#' + textareaId,
                 menubar: false,
@@ -39,74 +39,61 @@
                 height: 200,
                 content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; line-height: 1.6; } a { color: #0073aa; }',
                 setup: function(editor) {
-                    // Custom link button that uses a simple prompt
-                    editor.ui.registry.addButton('customlink', {
+                    // Custom link button using TinyMCE 4.x API
+                    editor.addButton('customlink', {
                         icon: 'link',
                         tooltip: 'Insert/Edit Link',
-                        onAction: function() {
+                        onclick: function() {
                             var selectedText = editor.selection.getContent({ format: 'text' });
                             var selectedNode = editor.selection.getNode();
                             var existingHref = '';
+                            var existingTarget = '';
 
                             // Check if we're inside an existing link
                             if (selectedNode.nodeName === 'A') {
                                 existingHref = selectedNode.getAttribute('href') || '';
+                                existingTarget = selectedNode.getAttribute('target') || '';
                                 if (!selectedText) {
                                     selectedText = selectedNode.textContent;
                                 }
                             }
 
-                            // Open custom dialog
+                            // Open custom dialog using TinyMCE 4.x windowManager
                             editor.windowManager.open({
                                 title: 'Insert Link',
-                                body: {
-                                    type: 'panel',
-                                    items: [
-                                        {
-                                            type: 'input',
-                                            name: 'url',
-                                            label: 'URL',
-                                            placeholder: 'https://example.com'
-                                        },
-                                        {
-                                            type: 'input',
-                                            name: 'text',
-                                            label: 'Link Text'
-                                        },
-                                        {
-                                            type: 'checkbox',
-                                            name: 'newwindow',
-                                            label: 'Open in new window'
-                                        }
-                                    ]
-                                },
-                                initialData: {
-                                    url: existingHref,
-                                    text: selectedText,
-                                    newwindow: false
-                                },
-                                buttons: [
+                                width: 400,
+                                height: 150,
+                                body: [
                                     {
-                                        type: 'cancel',
-                                        text: 'Cancel'
+                                        type: 'textbox',
+                                        name: 'url',
+                                        label: 'URL',
+                                        value: existingHref,
+                                        placeholder: 'https://example.com'
                                     },
                                     {
-                                        type: 'submit',
-                                        text: 'Insert',
-                                        primary: true
+                                        type: 'textbox',
+                                        name: 'text',
+                                        label: 'Link Text',
+                                        value: selectedText
+                                    },
+                                    {
+                                        type: 'checkbox',
+                                        name: 'newwindow',
+                                        label: 'Open in new window',
+                                        checked: existingTarget === '_blank'
                                     }
                                 ],
-                                onSubmit: function(api) {
-                                    var data = api.getData();
-                                    var url = data.url;
-                                    var text = data.text || url;
-                                    var target = data.newwindow ? ' target="_blank" rel="noopener noreferrer"' : '';
+                                onsubmit: function(e) {
+                                    var url = e.data.url;
+                                    var text = e.data.text || url;
+                                    var target = e.data.newwindow ? ' target="_blank" rel="noopener noreferrer"' : '';
 
                                     if (url) {
                                         // If editing existing link
                                         if (selectedNode.nodeName === 'A') {
                                             selectedNode.setAttribute('href', url);
-                                            if (data.newwindow) {
+                                            if (e.data.newwindow) {
                                                 selectedNode.setAttribute('target', '_blank');
                                                 selectedNode.setAttribute('rel', 'noopener noreferrer');
                                             } else {
@@ -120,8 +107,6 @@
                                             editor.insertContent(linkHtml);
                                         }
                                     }
-
-                                    api.close();
                                 }
                             });
                         }
