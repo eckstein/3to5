@@ -15,8 +15,16 @@ get_header();
 ?>
 
 <?php // ======================== HERO SECTION ======================== ?>
-<section class="hero section" id="home" <?php
-    $hero_bg = get_theme_mod( '3to5_hero_bg' );
+<?php
+$hero_bg           = get_theme_mod( '3to5_hero_bg' );
+$hero_video_enable = get_theme_mod( '3to5_hero_video_enable', false );
+$hero_video_url    = get_theme_mod( '3to5_hero_video_url', '' );
+$hero_classes      = 'hero section';
+if ( $hero_video_enable && $hero_video_url ) {
+    $hero_classes .= ' hero--has-video';
+}
+?>
+<section class="<?php echo esc_attr( $hero_classes ); ?>" id="home" <?php
     if ( $hero_bg ) {
         echo 'style="background-image: url(' . esc_url( $hero_bg ) . ');"';
     }
@@ -55,6 +63,61 @@ get_header();
                 </a>
             <?php endif; ?>
         </div>
+
+        <?php
+        // Video embed
+        $video_type   = get_theme_mod( '3to5_hero_video_type', 'youtube' );
+        $video_poster = get_theme_mod( '3to5_hero_video_poster', '' );
+
+        if ( $hero_video_enable && $hero_video_url ) :
+        ?>
+        <div class="hero__video">
+            <?php if ( 'youtube' === $video_type ) :
+                $youtube_id = three_to_five_get_youtube_id( $hero_video_url );
+                if ( $youtube_id ) :
+            ?>
+                <div class="hero__video-wrapper">
+                    <iframe
+                        src="https://www.youtube.com/embed/<?php echo esc_attr( $youtube_id ); ?>?rel=0&modestbranding=1"
+                        title="<?php esc_attr_e( 'Campaign Video', '3to5' ); ?>"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            <?php endif; ?>
+
+            <?php elseif ( 'vimeo' === $video_type ) :
+                $vimeo_id = three_to_five_get_vimeo_id( $hero_video_url );
+                if ( $vimeo_id ) :
+            ?>
+                <div class="hero__video-wrapper">
+                    <iframe
+                        src="https://player.vimeo.com/video/<?php echo esc_attr( $vimeo_id ); ?>?title=0&byline=0&portrait=0"
+                        title="<?php esc_attr_e( 'Campaign Video', '3to5' ); ?>"
+                        frameborder="0"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            <?php endif; ?>
+
+            <?php elseif ( 'self' === $video_type ) : ?>
+                <div class="hero__video-wrapper hero__video-wrapper--self">
+                    <video
+                        controls
+                        preload="metadata"
+                        <?php if ( $video_poster ) : ?>
+                            poster="<?php echo esc_url( $video_poster ); ?>"
+                        <?php endif; ?>
+                    >
+                        <source src="<?php echo esc_url( $hero_video_url ); ?>" type="video/mp4">
+                        <?php esc_html_e( 'Your browser does not support the video tag.', '3to5' ); ?>
+                    </video>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 

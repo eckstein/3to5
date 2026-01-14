@@ -209,6 +209,61 @@ function three_to_five_customize_register( $wp_customize ) {
         'type'    => 'url',
     ) );
 
+    // Hero Video Enable
+    $wp_customize->add_setting( '3to5_hero_video_enable', array(
+        'default'           => false,
+        'sanitize_callback' => 'three_to_five_sanitize_checkbox',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_hero_video_enable', array(
+        'label'       => __( 'Show Video in Hero', '3to5' ),
+        'description' => __( 'Display an embedded video below the hero text.', '3to5' ),
+        'section'     => '3to5_hero',
+        'type'        => 'checkbox',
+    ) );
+
+    // Hero Video Type
+    $wp_customize->add_setting( '3to5_hero_video_type', array(
+        'default'           => 'youtube',
+        'sanitize_callback' => 'three_to_five_sanitize_video_type',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_hero_video_type', array(
+        'label'   => __( 'Video Type', '3to5' ),
+        'section' => '3to5_hero',
+        'type'    => 'select',
+        'choices' => array(
+            'youtube' => __( 'YouTube', '3to5' ),
+            'vimeo'   => __( 'Vimeo', '3to5' ),
+            'self'    => __( 'Self-hosted (MP4)', '3to5' ),
+        ),
+    ) );
+
+    // Hero Video URL/ID
+    $wp_customize->add_setting( '3to5_hero_video_url', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_hero_video_url', array(
+        'label'       => __( 'Video URL', '3to5' ),
+        'description' => __( 'For YouTube/Vimeo: paste the full video URL. For self-hosted: enter the MP4 file URL.', '3to5' ),
+        'section'     => '3to5_hero',
+        'type'        => 'url',
+    ) );
+
+    // Hero Video Poster (for self-hosted)
+    $wp_customize->add_setting( '3to5_hero_video_poster', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, '3to5_hero_video_poster', array(
+        'label'       => __( 'Video Poster Image', '3to5' ),
+        'description' => __( 'Thumbnail shown before video plays (for self-hosted videos).', '3to5' ),
+        'section'     => '3to5_hero',
+    ) ) );
+
     // =========================================================================
     // Section: About
     // =========================================================================
@@ -703,6 +758,36 @@ function three_to_five_sanitize_checkbox( $checked ) {
 }
 
 /**
+ * Sanitize video type select
+ */
+function three_to_five_sanitize_video_type( $input ) {
+    $valid = array( 'youtube', 'vimeo', 'self' );
+    return in_array( $input, $valid, true ) ? $input : 'youtube';
+}
+
+/**
+ * Extract YouTube video ID from URL
+ */
+function three_to_five_get_youtube_id( $url ) {
+    $pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i';
+    if ( preg_match( $pattern, $url, $matches ) ) {
+        return $matches[1];
+    }
+    return '';
+}
+
+/**
+ * Extract Vimeo video ID from URL
+ */
+function three_to_five_get_vimeo_id( $url ) {
+    $pattern = '/(?:vimeo\.com\/)(\d+)/i';
+    if ( preg_match( $pattern, $url, $matches ) ) {
+        return $matches[1];
+    }
+    return '';
+}
+
+/**
  * Output custom CSS for colors
  */
 function three_to_five_custom_css() {
@@ -728,7 +813,7 @@ function three_to_five_customize_preview_js() {
     wp_enqueue_script(
         '3to5-customizer-preview',
         THREE_TO_FIVE_URI . '/assets/js/customizer-preview.js',
-        array( 'customize-preview' ),
+        array( 'jquery', 'customize-preview' ),
         THREE_TO_FIVE_VERSION,
         true
     );
