@@ -862,6 +862,83 @@ function three_to_five_customize_register( $wp_customize ) {
     ) ) );
 
     // =========================================================================
+    // Section: Social Sharing
+    // =========================================================================
+    $wp_customize->add_section( '3to5_social_sharing', array(
+        'title'       => __( 'Social Sharing', '3to5' ),
+        'description' => __( 'Configure how your site appears when shared on social media.', '3to5' ),
+        'panel'       => '3to5_campaign',
+        'priority'    => 85,
+    ) );
+
+    // OG Title
+    $wp_customize->add_setting( '3to5_og_title', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_og_title', array(
+        'label'       => __( 'Share Title', '3to5' ),
+        'description' => __( 'Leave blank to use the site title.', '3to5' ),
+        'section'     => '3to5_social_sharing',
+        'type'        => 'text',
+    ) );
+
+    // OG Description
+    $wp_customize->add_setting( '3to5_og_description', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_textarea_field',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_og_description', array(
+        'label'       => __( 'Share Description', '3to5' ),
+        'description' => __( 'A brief description shown when shared. Leave blank to use the site tagline.', '3to5' ),
+        'section'     => '3to5_social_sharing',
+        'type'        => 'textarea',
+    ) );
+
+    // OG Image
+    $wp_customize->add_setting( '3to5_og_image', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, '3to5_og_image', array(
+        'label'       => __( 'Share Image', '3to5' ),
+        'description' => __( 'Recommended size: 1200×630 pixels. This image appears when your site is shared on Facebook, LinkedIn, etc.', '3to5' ),
+        'section'     => '3to5_social_sharing',
+    ) ) );
+
+    // Twitter Card Type
+    $wp_customize->add_setting( '3to5_twitter_card', array(
+        'default'           => 'summary_large_image',
+        'sanitize_callback' => 'three_to_five_sanitize_twitter_card',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_twitter_card', array(
+        'label'   => __( 'Twitter Card Type', '3to5' ),
+        'section' => '3to5_social_sharing',
+        'type'    => 'select',
+        'choices' => array(
+            'summary'             => __( 'Summary (small image)', '3to5' ),
+            'summary_large_image' => __( 'Summary with Large Image', '3to5' ),
+        ),
+    ) );
+
+    // Twitter Handle
+    $wp_customize->add_setting( '3to5_twitter_handle', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_twitter_handle', array(
+        'label'       => __( 'Twitter/X Handle', '3to5' ),
+        'description' => __( 'Your Twitter username (without the @).', '3to5' ),
+        'section'     => '3to5_social_sharing',
+        'type'        => 'text',
+    ) );
+
+    // =========================================================================
     // Section: Footer
     // =========================================================================
     $wp_customize->add_section( '3to5_footer', array(
@@ -897,6 +974,14 @@ function three_to_five_sanitize_checkbox( $checked ) {
 function three_to_five_sanitize_video_type( $input ) {
     $valid = array( 'youtube', 'vimeo', 'self' );
     return in_array( $input, $valid, true ) ? $input : 'youtube';
+}
+
+/**
+ * Sanitize Twitter card type select
+ */
+function three_to_five_sanitize_twitter_card( $input ) {
+    $valid = array( 'summary', 'summary_large_image' );
+    return in_array( $input, $valid, true ) ? $input : 'summary_large_image';
 }
 
 /**
@@ -1018,3 +1103,67 @@ add_action( 'customize_preview_init', 'three_to_five_customize_preview_js' );
 function three_to_five_get_mod( $key, $default = '' ) {
     return get_theme_mod( "3to5_{$key}", $default );
 }
+
+/**
+ * Output Open Graph and Twitter Card meta tags
+ */
+function three_to_five_social_meta_tags() {
+    // Get values with fallbacks
+    $og_title = get_theme_mod( '3to5_og_title', '' );
+    if ( empty( $og_title ) ) {
+        $og_title = get_bloginfo( 'name' );
+    }
+
+    $og_description = get_theme_mod( '3to5_og_description', '' );
+    if ( empty( $og_description ) ) {
+        $og_description = get_bloginfo( 'description' );
+    }
+
+    $og_image        = get_theme_mod( '3to5_og_image', '' );
+    $twitter_card    = get_theme_mod( '3to5_twitter_card', 'summary_large_image' );
+    $twitter_handle  = get_theme_mod( '3to5_twitter_handle', '' );
+    $site_url        = home_url( '/' );
+    $site_name       = get_bloginfo( 'name' );
+
+    // Open Graph tags
+    ?>
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?php echo esc_url( $site_url ); ?>">
+    <meta property="og:title" content="<?php echo esc_attr( $og_title ); ?>">
+    <?php if ( $og_description ) : ?>
+    <meta property="og:description" content="<?php echo esc_attr( $og_description ); ?>">
+    <?php endif; ?>
+    <meta property="og:site_name" content="<?php echo esc_attr( $site_name ); ?>">
+    <?php if ( $og_image ) : ?>
+    <meta property="og:image" content="<?php echo esc_url( $og_image ); ?>">
+    <meta property="og:image:alt" content="<?php echo esc_attr( $og_title ); ?>">
+    <?php
+        // Try to get image dimensions
+        $image_id = attachment_url_to_postid( $og_image );
+        if ( $image_id ) {
+            $image_meta = wp_get_attachment_image_src( $image_id, 'full' );
+            if ( $image_meta ) {
+                echo '<meta property="og:image:width" content="' . esc_attr( $image_meta[1] ) . '">' . "\n";
+                echo '    <meta property="og:image:height" content="' . esc_attr( $image_meta[2] ) . '">' . "\n";
+            }
+        }
+    ?>
+    <?php endif; ?>
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="<?php echo esc_attr( $twitter_card ); ?>">
+    <meta name="twitter:title" content="<?php echo esc_attr( $og_title ); ?>">
+    <?php if ( $og_description ) : ?>
+    <meta name="twitter:description" content="<?php echo esc_attr( $og_description ); ?>">
+    <?php endif; ?>
+    <?php if ( $og_image ) : ?>
+    <meta name="twitter:image" content="<?php echo esc_url( $og_image ); ?>">
+    <?php endif; ?>
+    <?php if ( $twitter_handle ) : ?>
+    <meta name="twitter:site" content="@<?php echo esc_attr( $twitter_handle ); ?>">
+    <meta name="twitter:creator" content="@<?php echo esc_attr( $twitter_handle ); ?>">
+    <?php endif; ?>
+    <?php
+}
+add_action( 'wp_head', 'three_to_five_social_meta_tags', 5 );
