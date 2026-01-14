@@ -479,6 +479,29 @@ img {
 .action {
     background-color: var(--color-primary);
     color: white;
+    position: relative;
+}
+
+.action--has-bg {
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.action--has-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-hero-overlay);
+    pointer-events: none;
+}
+
+.action--has-bg > .container {
+    position: relative;
+    z-index: 1;
 }
 
 .action h2 {

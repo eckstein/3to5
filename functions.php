@@ -570,6 +570,17 @@ function three_to_five_customize_register( $wp_customize ) {
         'type'    => 'checkbox',
     ) );
 
+    // Action Background Image
+    $wp_customize->add_setting( '3to5_action_bg', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, '3to5_action_bg', array(
+        'label'   => __( 'Background Image', '3to5' ),
+        'section' => '3to5_action',
+    ) ) );
+
     // Action Title
     $wp_customize->add_setting( '3to5_action_title', array(
         'default'           => __( 'How to Sign the Petition', '3to5' ),

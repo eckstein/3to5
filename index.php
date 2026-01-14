@@ -205,7 +205,14 @@ if ( $hero_video_enable && $hero_video_url ) {
 
 <?php // ======================== TAKE ACTION SECTION ======================== ?>
 <?php if ( get_theme_mod( '3to5_action_enable', true ) ) : ?>
-<section class="action section" id="action">
+<?php
+$action_bg = get_theme_mod( '3to5_action_bg' );
+$action_classes = 'action section';
+if ( $action_bg ) {
+    $action_classes .= ' action--has-bg';
+}
+?>
+<section class="<?php echo esc_attr( $action_classes ); ?>" id="action"<?php if ( $action_bg ) : ?> style="background-image: url(<?php echo esc_url( $action_bg ); ?>);"<?php endif; ?>>
     <div class="container text-center">
         <h2><?php echo esc_html( get_theme_mod( '3to5_action_title', __( 'How to Sign the Petition', '3to5' ) ) ); ?></h2>
         <p><?php echo esc_html( get_theme_mod( '3to5_action_subtitle', __( 'Your signature matters! Here is how you can help put this measure on the ballot.', '3to5' ) ) ); ?></p>
