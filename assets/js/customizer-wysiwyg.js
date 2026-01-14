@@ -10,7 +10,7 @@
     'use strict';
 
     // Wait for the customizer to be ready
-    wp.customize.bind('ready', function() {
+    wp.customize.bind('ready', function() { 
         initWysiwygEditors();
     });
 
