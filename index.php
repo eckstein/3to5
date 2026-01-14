@@ -295,33 +295,11 @@ if ( $has_locations ) :
 <?php // ======================== FAQ SECTION ======================== ?>
 <?php if ( get_theme_mod( '3to5_faq_enable', true ) ) : ?>
 <?php
+$faq_items = three_to_five_get_faq_items();
 $has_faqs = false;
-$default_faqs = array(
-    1 => array(
-        'question' => __( 'How many signatures are needed?', '3to5' ),
-        'answer'   => __( 'We need to collect a specific number of valid signatures from registered voters in Lewis County. Every signature counts toward getting this measure on the ballot.', '3to5' ),
-    ),
-    2 => array(
-        'question' => __( 'Who can sign the petition?', '3to5' ),
-        'answer'   => __( 'Any registered voter who resides in Lewis County can sign the petition. You will need to provide valid identification.', '3to5' ),
-    ),
-    3 => array(
-        'question' => __( 'When is the deadline?', '3to5' ),
-        'answer'   => __( 'We have a limited time to collect all necessary signatures. Please sign as soon as possible and encourage others to do the same.', '3to5' ),
-    ),
-    4 => array(
-        'question' => '',
-        'answer'   => '',
-    ),
-    5 => array(
-        'question' => '',
-        'answer'   => '',
-    ),
-);
 
-for ( $i = 1; $i <= 5; $i++ ) {
-    $question = get_theme_mod( "3to5_faq_{$i}_question", $default_faqs[ $i ]['question'] );
-    if ( $question ) {
+foreach ( $faq_items as $faq ) {
+    if ( ! empty( $faq['question'] ) && ! empty( $faq['answer'] ) ) {
         $has_faqs = true;
         break;
     }
@@ -334,24 +312,20 @@ if ( $has_faqs ) :
         <h2 class="text-center"><?php echo esc_html( get_theme_mod( '3to5_faq_title', __( 'Frequently Asked Questions', '3to5' ) ) ); ?></h2>
 
         <div class="faq__list">
-            <?php
-            for ( $i = 1; $i <= 5; $i++ ) :
-                $question = get_theme_mod( "3to5_faq_{$i}_question", $default_faqs[ $i ]['question'] );
-                $answer   = get_theme_mod( "3to5_faq_{$i}_answer", $default_faqs[ $i ]['answer'] );
-
-                if ( $question && $answer ) :
+            <?php foreach ( $faq_items as $index => $faq ) :
+                if ( ! empty( $faq['question'] ) && ! empty( $faq['answer'] ) ) :
             ?>
-                <div class="faq-item">
+                <div class="faq-item" data-faq-index="<?php echo esc_attr( $index ); ?>">
                     <button class="faq-item__question" aria-expanded="false">
-                        <?php echo esc_html( $question ); ?>
+                        <?php echo esc_html( $faq['question'] ); ?>
                     </button>
                     <div class="faq-item__answer" aria-hidden="true">
-                        <?php echo wp_kses_post( wpautop( $answer ) ); ?>
+                        <?php echo wp_kses_post( wpautop( $faq['answer'] ) ); ?>
                     </div>
                 </div>
             <?php
                 endif;
-            endfor;
+            endforeach;
             ?>
         </div>
     </div>

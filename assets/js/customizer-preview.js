@@ -155,22 +155,70 @@
         });
     });
 
-    // FAQ items (1-5)
-    for (var l = 1; l <= 5; l++) {
-        (function(index) {
-            wp.customize('3to5_faq_' + index + '_question', function(value) {
-                value.bind(function(newval) {
-                    $('.faq-item').eq(index - 1).find('.faq-item__question').contents().first().replaceWith(newval);
-                });
+    // FAQ items (dynamic repeater)
+    wp.customize('3to5_faq_items', function(value) {
+        value.bind(function(newval) {
+            var faqs = [];
+
+            // Parse JSON if string
+            if (typeof newval === 'string') {
+                try {
+                    faqs = JSON.parse(newval);
+                } catch (e) {
+                    faqs = [];
+                }
+            } else if (Array.isArray(newval)) {
+                faqs = newval;
+            }
+
+            var $faqList = $('.faq__list');
+
+            // If FAQ section doesn't exist and we have FAQs, we need a refresh
+            if ($faqList.length === 0 && faqs.length > 0) {
+                return;
+            }
+
+            // Clear existing FAQ items
+            $faqList.empty();
+
+            // Add new FAQ items
+            faqs.forEach(function(faq, index) {
+                if (faq.question && faq.answer) {
+                    var answerHtml = '<p>' + faq.answer.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+
+                    var $item = $(
+                        '<div class="faq-item" data-faq-index="' + index + '">' +
+                            '<button class="faq-item__question" aria-expanded="false">' +
+                                escapeHtml(faq.question) +
+                            '</button>' +
+                            '<div class="faq-item__answer" aria-hidden="true">' +
+                                answerHtml +
+                            '</div>' +
+                        '</div>'
+                    );
+
+                    $faqList.append($item);
+                }
             });
 
-            wp.customize('3to5_faq_' + index + '_answer', function(value) {
-                value.bind(function(newval) {
-                    var html = '<p>' + newval.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
-                    $('.faq-item').eq(index - 1).find('.faq-item__answer').html(html);
-                });
-            });
-        })(l);
+            // Show/hide the entire FAQ section based on content
+            var $faqSection = $('.faq.section');
+            if (faqs.length === 0 || !faqs.some(function(f) { return f.question && f.answer; })) {
+                $faqSection.hide();
+            } else {
+                $faqSection.show();
+            }
+        });
+    });
+
+    /**
+     * Escape HTML entities for safe output
+     */
+    function escapeHtml(text) {
+        if (!text) return '';
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     // =========================================================================

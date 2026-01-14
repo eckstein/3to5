@@ -21,6 +21,92 @@ define( 'THREE_TO_FIVE_URI', get_template_directory_uri() );
  * Custom Customizer Control: TinyMCE WYSIWYG Editor
  */
 if ( class_exists( 'WP_Customize_Control' ) ) {
+
+    /**
+     * Custom Control: FAQ Repeater
+     */
+    class Three_To_Five_FAQ_Repeater_Control extends WP_Customize_Control {
+        /**
+         * Control type
+         *
+         * @var string
+         */
+        public $type = 'faq_repeater';
+
+        /**
+         * Enqueue scripts and styles
+         */
+        public function enqueue() {
+            wp_enqueue_script(
+                '3to5-customizer-faq',
+                THREE_TO_FIVE_URI . '/assets/js/customizer-faq.js',
+                array( 'jquery', 'customize-controls', 'jquery-ui-sortable' ),
+                THREE_TO_FIVE_VERSION,
+                true
+            );
+            wp_enqueue_style(
+                '3to5-customizer-faq',
+                THREE_TO_FIVE_URI . '/assets/css/customizer-faq.css',
+                array(),
+                THREE_TO_FIVE_VERSION
+            );
+        }
+
+        /**
+         * Render the control content
+         */
+        public function render_content() {
+            $faqs = $this->value();
+            if ( ! is_array( $faqs ) ) {
+                $faqs = json_decode( $faqs, true );
+            }
+            if ( ! is_array( $faqs ) ) {
+                $faqs = array();
+            }
+            ?>
+            <div class="faq-repeater-control">
+                <?php if ( ! empty( $this->label ) ) : ?>
+                    <span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
+                <?php endif; ?>
+                <?php if ( ! empty( $this->description ) ) : ?>
+                    <span class="description customize-control-description"><?php echo esc_html( $this->description ); ?></span>
+                <?php endif; ?>
+
+                <input type="hidden" class="faq-repeater-value" <?php $this->link(); ?> value="<?php echo esc_attr( wp_json_encode( $faqs ) ); ?>">
+
+                <div class="faq-repeater-items" data-setting-id="<?php echo esc_attr( $this->id ); ?>">
+                    <?php foreach ( $faqs as $index => $faq ) : ?>
+                        <div class="faq-repeater-item" data-index="<?php echo esc_attr( $index ); ?>">
+                            <div class="faq-repeater-item-header">
+                                <span class="faq-repeater-item-title"><?php echo esc_html( ! empty( $faq['question'] ) ? $faq['question'] : __( 'New FAQ', '3to5' ) ); ?></span>
+                                <button type="button" class="faq-repeater-toggle" aria-expanded="false">
+                                    <span class="screen-reader-text"><?php esc_html_e( 'Toggle', '3to5' ); ?></span>
+                                    <span class="dashicons dashicons-arrow-down-alt2"></span>
+                                </button>
+                            </div>
+                            <div class="faq-repeater-item-content" style="display: none;">
+                                <p>
+                                    <label><?php esc_html_e( 'Question', '3to5' ); ?></label>
+                                    <input type="text" class="faq-question widefat" value="<?php echo esc_attr( $faq['question'] ?? '' ); ?>">
+                                </p>
+                                <p>
+                                    <label><?php esc_html_e( 'Answer', '3to5' ); ?></label>
+                                    <textarea class="faq-answer widefat" rows="4"><?php echo esc_textarea( $faq['answer'] ?? '' ); ?></textarea>
+                                </p>
+                                <p class="faq-repeater-item-actions">
+                                    <button type="button" class="button faq-repeater-remove"><?php esc_html_e( 'Remove', '3to5' ); ?></button>
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <button type="button" class="button faq-repeater-add"><?php esc_html_e( 'Add FAQ', '3to5' ); ?></button>
+            </div>
+            <?php
+        }
+    }
+
     class Three_To_Five_WYSIWYG_Control extends WP_Customize_Control {
         /**
          * Control type
@@ -645,40 +731,32 @@ function three_to_five_customize_register( $wp_customize ) {
         'type'    => 'text',
     ) );
 
-    // FAQs (up to 5)
-    for ( $i = 1; $i <= 5; $i++ ) {
-        $wp_customize->add_setting( "3to5_faq_{$i}_question", array(
-            'default'           => '',
-            'sanitize_callback' => 'sanitize_text_field',
-            'transport'         => 'postMessage',
-        ) );
-        $wp_customize->add_control( "3to5_faq_{$i}_question", array(
-            'label'   => sprintf( __( 'FAQ %d Question', '3to5' ), $i ),
-            'section' => '3to5_faq',
-            'type'    => 'text',
-        ) );
+    // FAQs Repeater (dynamic)
+    $default_faqs = array(
+        array(
+            'question' => __( 'How many signatures are needed?', '3to5' ),
+            'answer'   => __( 'We need to collect a specific number of valid signatures from registered voters in Lewis County. Every signature counts toward getting this measure on the ballot.', '3to5' ),
+        ),
+        array(
+            'question' => __( 'Who can sign the petition?', '3to5' ),
+            'answer'   => __( 'Any registered voter who resides in Lewis County can sign the petition. You will need to provide valid identification.', '3to5' ),
+        ),
+        array(
+            'question' => __( 'When is the deadline?', '3to5' ),
+            'answer'   => __( 'We have a limited time to collect all necessary signatures. Please sign as soon as possible and encourage others to do the same.', '3to5' ),
+        ),
+    );
 
-        $wp_customize->add_setting( "3to5_faq_{$i}_answer", array(
-            'default'           => '',
-            'sanitize_callback' => 'wp_kses_post',
-            'transport'         => 'postMessage',
-        ) );
-        $wp_customize->add_control( "3to5_faq_{$i}_answer", array(
-            'label'   => sprintf( __( 'FAQ %d Answer', '3to5' ), $i ),
-            'section' => '3to5_faq',
-            'type'    => 'textarea',
-        ) );
-    }
-
-    // Set default FAQs
-    $wp_customize->get_setting( '3to5_faq_1_question' )->default = __( 'How many signatures are needed?', '3to5' );
-    $wp_customize->get_setting( '3to5_faq_1_answer' )->default = __( 'We need to collect a specific number of valid signatures from registered voters in Lewis County. Every signature counts toward getting this measure on the ballot.', '3to5' );
-
-    $wp_customize->get_setting( '3to5_faq_2_question' )->default = __( 'Who can sign the petition?', '3to5' );
-    $wp_customize->get_setting( '3to5_faq_2_answer' )->default = __( 'Any registered voter who resides in Lewis County can sign the petition. You will need to provide valid identification.', '3to5' );
-
-    $wp_customize->get_setting( '3to5_faq_3_question' )->default = __( 'When is the deadline?', '3to5' );
-    $wp_customize->get_setting( '3to5_faq_3_answer' )->default = __( 'We have a limited time to collect all necessary signatures. Please sign as soon as possible and encourage others to do the same.', '3to5' );
+    $wp_customize->add_setting( '3to5_faq_items', array(
+        'default'           => wp_json_encode( $default_faqs ),
+        'sanitize_callback' => 'three_to_five_sanitize_faq_items',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new Three_To_Five_FAQ_Repeater_Control( $wp_customize, '3to5_faq_items', array(
+        'label'       => __( 'FAQ Items', '3to5' ),
+        'description' => __( 'Add, edit, remove, and reorder your FAQ items.', '3to5' ),
+        'section'     => '3to5_faq',
+    ) ) );
 
     // =========================================================================
     // Section: Contact
@@ -819,6 +897,64 @@ function three_to_five_sanitize_checkbox( $checked ) {
 function three_to_five_sanitize_video_type( $input ) {
     $valid = array( 'youtube', 'vimeo', 'self' );
     return in_array( $input, $valid, true ) ? $input : 'youtube';
+}
+
+/**
+ * Sanitize FAQ items (JSON array)
+ */
+function three_to_five_sanitize_faq_items( $input ) {
+    if ( is_string( $input ) ) {
+        $input = json_decode( $input, true );
+    }
+
+    if ( ! is_array( $input ) ) {
+        return '[]';
+    }
+
+    $sanitized = array();
+    foreach ( $input as $item ) {
+        if ( ! is_array( $item ) ) {
+            continue;
+        }
+        $sanitized[] = array(
+            'question' => isset( $item['question'] ) ? sanitize_text_field( $item['question'] ) : '',
+            'answer'   => isset( $item['answer'] ) ? wp_kses_post( $item['answer'] ) : '',
+        );
+    }
+
+    return wp_json_encode( $sanitized );
+}
+
+/**
+ * Get FAQ items as array
+ */
+function three_to_five_get_faq_items() {
+    $default_faqs = array(
+        array(
+            'question' => __( 'How many signatures are needed?', '3to5' ),
+            'answer'   => __( 'We need to collect a specific number of valid signatures from registered voters in Lewis County. Every signature counts toward getting this measure on the ballot.', '3to5' ),
+        ),
+        array(
+            'question' => __( 'Who can sign the petition?', '3to5' ),
+            'answer'   => __( 'Any registered voter who resides in Lewis County can sign the petition. You will need to provide valid identification.', '3to5' ),
+        ),
+        array(
+            'question' => __( 'When is the deadline?', '3to5' ),
+            'answer'   => __( 'We have a limited time to collect all necessary signatures. Please sign as soon as possible and encourage others to do the same.', '3to5' ),
+        ),
+    );
+
+    $faqs = get_theme_mod( '3to5_faq_items', wp_json_encode( $default_faqs ) );
+
+    if ( is_string( $faqs ) ) {
+        $faqs = json_decode( $faqs, true );
+    }
+
+    if ( ! is_array( $faqs ) ) {
+        return $default_faqs;
+    }
+
+    return $faqs;
 }
 
 /**
