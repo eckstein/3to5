@@ -155,11 +155,15 @@ if ( $hero_video_enable && $hero_video_url ) {
 
        <?php
        $reasons_graphic = get_theme_mod( '3to5_reasons_graphic' );
-       $reasons_graphic_width_desktop = get_theme_mod( '3to5_reasons_graphic_width_desktop', '100' );
-       $reasons_graphic_width_mobile  = get_theme_mod( '3to5_reasons_graphic_width_mobile', '100' );
+       $reasons_graphic_width_desktop = get_theme_mod( '3to5_reasons_graphic_width_desktop', 100 );
+       $reasons_graphic_width_mobile  = get_theme_mod( '3to5_reasons_graphic_width_mobile', 100 );
        ?>
        <?php if ( $reasons_graphic ) : ?>
-            <div class="why__graphic" style="--graphic-width-desktop: <?php echo esc_attr( $reasons_graphic_width_desktop ); ?>%; --graphic-width-mobile: <?php echo esc_attr( $reasons_graphic_width_mobile ); ?>%;">
+            <style>
+                .why__graphic img { width: <?php echo esc_attr( $reasons_graphic_width_desktop ); ?>%; }
+                @media (max-width: 768px) { .why__graphic img { width: <?php echo esc_attr( $reasons_graphic_width_mobile ); ?>%; } }
+            </style>
+            <div class="why__graphic">
                 <img src="<?php echo esc_url( $reasons_graphic ); ?>" alt="<?php esc_attr_e( 'Reasons Graphic', '3to5' ); ?>">
             </div>
        <?php endif; ?>
