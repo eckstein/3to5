@@ -413,12 +413,27 @@ if ( $has_faqs ) :
                 <?php endif; ?>
             </div>
 
+            <?php
+            $volunteer_title    = get_theme_mod( '3to5_volunteer_title', __( 'Volunteer', '3to5' ) );
+            $volunteer_text     = get_theme_mod( '3to5_volunteer_text', __( 'Want to help gather signatures or spread the word? We need volunteers throughout Lewis County. Contact us to get involved!', '3to5' ) );
+            $volunteer_btn_text = get_theme_mod( '3to5_volunteer_btn_text', __( 'Become a Volunteer', '3to5' ) );
+            $volunteer_btn_link = get_theme_mod( '3to5_volunteer_btn_link', '' );
+
+            // Fall back to mailto if no custom link provided
+            if ( empty( $volunteer_btn_link ) && $email ) {
+                $volunteer_btn_link = 'mailto:' . $email . '?subject=' . rawurlencode( $volunteer_btn_text );
+            }
+            ?>
             <div class="contact__volunteer">
-                <h3><?php esc_html_e( 'Volunteer', '3to5' ); ?></h3>
-                <p><?php esc_html_e( 'Want to help gather signatures or spread the word? We need volunteers throughout Lewis County. Contact us to get involved!', '3to5' ); ?></p>
-                <?php if ( $email ) : ?>
-                    <a href="mailto:<?php echo esc_attr( $email ); ?>?subject=<?php echo esc_attr( rawurlencode( __( 'I want to volunteer!', '3to5' ) ) ); ?>" class="btn btn--primary">
-                        <?php esc_html_e( 'Become a Volunteer', '3to5' ); ?>
+                <?php if ( $volunteer_title ) : ?>
+                    <h3><?php echo esc_html( $volunteer_title ); ?></h3>
+                <?php endif; ?>
+                <?php if ( $volunteer_text ) : ?>
+                    <p><?php echo esc_html( $volunteer_text ); ?></p>
+                <?php endif; ?>
+                <?php if ( $volunteer_btn_text && $volunteer_btn_link ) : ?>
+                    <a href="<?php echo esc_url( $volunteer_btn_link ); ?>" class="btn btn--primary">
+                        <?php echo esc_html( $volunteer_btn_text ); ?>
                     </a>
                 <?php endif; ?>
             </div>

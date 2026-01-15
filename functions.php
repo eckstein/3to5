@@ -863,6 +863,55 @@ function three_to_five_customize_register( $wp_customize ) {
         ) );
     }
 
+    // Volunteer Box Title
+    $wp_customize->add_setting( '3to5_volunteer_title', array(
+        'default'           => __( 'Volunteer', '3to5' ),
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_volunteer_title', array(
+        'label'   => __( 'Volunteer Box Title', '3to5' ),
+        'section' => '3to5_contact',
+        'type'    => 'text',
+    ) );
+
+    // Volunteer Box Text
+    $wp_customize->add_setting( '3to5_volunteer_text', array(
+        'default'           => __( 'Want to help gather signatures or spread the word? We need volunteers throughout Lewis County. Contact us to get involved!', '3to5' ),
+        'sanitize_callback' => 'sanitize_textarea_field',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_volunteer_text', array(
+        'label'   => __( 'Volunteer Box Text', '3to5' ),
+        'section' => '3to5_contact',
+        'type'    => 'textarea',
+    ) );
+
+    // Volunteer Button Text
+    $wp_customize->add_setting( '3to5_volunteer_btn_text', array(
+        'default'           => __( 'Become a Volunteer', '3to5' ),
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_volunteer_btn_text', array(
+        'label'   => __( 'Volunteer Button Text', '3to5' ),
+        'section' => '3to5_contact',
+        'type'    => 'text',
+    ) );
+
+    // Volunteer Button Link
+    $wp_customize->add_setting( '3to5_volunteer_btn_link', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_volunteer_btn_link', array(
+        'label'       => __( 'Volunteer Button Link', '3to5' ),
+        'description' => __( 'Leave blank to use a mailto link with the contact email.', '3to5' ),
+        'section'     => '3to5_contact',
+        'type'        => 'url',
+    ) );
+
     // =========================================================================
     // Section: Colors
     // =========================================================================
