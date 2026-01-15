@@ -153,8 +153,12 @@ if ( $hero_video_enable && $hero_video_url ) {
     <div class="container">
         <h2 class="text-center"><?php echo esc_html( get_theme_mod( '3to5_reasons_title', __( 'Key Benefits', '3to5' ) ) ); ?></h2>
 
-        <img src="http://lewiscounty3to5.com/wp-content/uploads/2026/01/Boundary-Gif.gif" alt="Gif showing old and new boundary lines for Lewis County">
-
+       <?php $reasons_graphic = get_theme_mod( '3to5_reasons_graphic' ); ?>
+       <?php if ( $reasons_graphic ) : ?>
+            <div class="why__graphic">
+                <img src="<?php echo esc_url( $reasons_graphic ); ?>" alt="<?php esc_attr_e( 'Reasons Graphic', '3to5' ); ?>">
+            </div>
+       <?php endif; ?>
         <div class="why__grid">
             <?php
             $default_reasons = array(

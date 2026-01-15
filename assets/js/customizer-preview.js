@@ -82,6 +82,12 @@
                     $('.reason-card').eq(index - 1).find('.reason-card__text').text(newval);
                 });
             });
+            // Reason graphic
+            wp.customize('3to5_reason_' + index + '_graphic', function(value) {
+                value.bind(function(newval) {
+                    $('.reason-card').eq(index - 1).find('.reason-card__graphic').attr('src', newval);
+                });
+            });
         })(i);
     }
 

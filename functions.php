@@ -495,6 +495,17 @@ function three_to_five_customize_register( $wp_customize ) {
         'type'    => 'text',
     ) );
 
+    // Reasons Graphic
+    $wp_customize->add_setting( '3to5_reasons_graphic', array(
+        'default'           => THREE_TO_FIVE_URI . '/assets/images/why-graphic.png',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, '3to5_reasons_graphic', array(
+        'label'   => __( 'Reasons Graphic', '3to5' ),
+        'section' => '3to5_reasons',
+    ) ) );
+
     // Reasons (up to 4)
     for ( $i = 1; $i <= 4; $i++ ) {
         $wp_customize->add_setting( "3to5_reason_{$i}_title", array(
