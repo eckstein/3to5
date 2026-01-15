@@ -506,6 +506,42 @@ function three_to_five_customize_register( $wp_customize ) {
         'section' => '3to5_reasons',
     ) ) );
 
+    // Reasons Graphic Desktop Width
+    $wp_customize->add_setting( '3to5_reasons_graphic_width_desktop', array(
+        'default'           => '100',
+        'sanitize_callback' => 'absint',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_reasons_graphic_width_desktop', array(
+        'label'       => __( 'Graphic Width - Desktop (%)', '3to5' ),
+        'description' => __( 'Width of the graphic on desktop screens (percentage of container).', '3to5' ),
+        'section'     => '3to5_reasons',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 10,
+            'max'  => 100,
+            'step' => 5,
+        ),
+    ) );
+
+    // Reasons Graphic Mobile Width
+    $wp_customize->add_setting( '3to5_reasons_graphic_width_mobile', array(
+        'default'           => '100',
+        'sanitize_callback' => 'absint',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_reasons_graphic_width_mobile', array(
+        'label'       => __( 'Graphic Width - Mobile (%)', '3to5' ),
+        'description' => __( 'Width of the graphic on mobile screens (percentage of container).', '3to5' ),
+        'section'     => '3to5_reasons',
+        'type'        => 'number',
+        'input_attrs' => array(
+            'min'  => 10,
+            'max'  => 100,
+            'step' => 5,
+        ),
+    ) );
+
     // Reasons (up to 4)
     for ( $i = 1; $i <= 4; $i++ ) {
         $wp_customize->add_setting( "3to5_reason_{$i}_title", array(

@@ -430,6 +430,25 @@ img {
    Why Section (Benefits/Reasons)
    ========================================================================== */
 
+.why__graphic {
+    text-align: center;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.why__graphic img {
+    width: var(--graphic-width-desktop, 100%);
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .why__graphic img {
+        width: var(--graphic-width-mobile, 100%);
+    }
+}
+
 .why__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
