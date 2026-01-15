@@ -842,6 +842,114 @@ img {
 }
 
 /* ==========================================================================
+   Mobile Responsive Adjustments
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* Reduce container horizontal padding */
+    .container {
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
+
+    /* Reduce section vertical padding */
+    .section {
+        padding-top: var(--spacing-lg);
+        padding-bottom: var(--spacing-lg);
+    }
+
+    /* Hero adjustments */
+    .hero__content {
+        padding: var(--spacing-md);
+    }
+
+    .hero--has-video {
+        padding-top: 80px;
+        padding-bottom: var(--spacing-lg);
+    }
+
+    .hero__buttons {
+        gap: var(--spacing-xs);
+    }
+
+    /* Grid adjustments - allow smaller min widths */
+    .about__grid {
+        gap: var(--spacing-md);
+    }
+
+    .why__grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .action__grid {
+        gap: var(--spacing-sm);
+    }
+
+    .locations__list {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .contact__grid {
+        gap: var(--spacing-md);
+    }
+
+    .footer__grid {
+        gap: var(--spacing-md);
+    }
+
+    /* Card padding adjustments */
+    .reason-card,
+    .location-card,
+    .action-step {
+        padding: var(--spacing-sm);
+    }
+
+    /* Button adjustments */
+    .btn {
+        padding: 0.75rem 1.5rem;
+    }
+
+    .btn--large {
+        padding: 1rem 2rem;
+    }
+
+    /* FAQ list spacing */
+    .faq__list {
+        margin-top: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small screens - even tighter spacing */
+    .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .section {
+        padding-top: var(--spacing-md);
+        padding-bottom: var(--spacing-md);
+    }
+
+    .hero__content {
+        padding: var(--spacing-sm);
+    }
+
+    /* Full-width buttons on very small screens */
+    .hero__buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero__buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ==========================================================================
    Print Styles
    ========================================================================== */
 
