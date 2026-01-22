@@ -295,6 +295,28 @@ function three_to_five_setup() {
 add_action( 'after_setup_theme', 'three_to_five_setup' );
 
 /**
+ * Add Donate link to primary menu if donation stripe is enabled
+ */
+function three_to_five_add_donate_menu_item( $items, $args ) {
+    // Only add to primary menu
+    if ( 'primary' !== $args->theme_location ) {
+        return $items;
+    }
+
+    // Only add if donation stripe is enabled
+    if ( ! get_theme_mod( '3to5_donation_stripe_enable', true ) ) {
+        return $items;
+    }
+
+    // Add donate link
+    $donate_text = __( 'Donate', '3to5' );
+    $items .= '<li class="menu-item menu-item-donate"><a href="#donate">' . esc_html( $donate_text ) . '</a></li>';
+
+    return $items;
+}
+add_filter( 'wp_nav_menu_items', 'three_to_five_add_donate_menu_item', 10, 2 );
+
+/**
  * Enqueue scripts and styles
  */
 function three_to_five_scripts() {

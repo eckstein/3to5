@@ -62,6 +62,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <li><a href="#action"><?php esc_html_e( 'Take Action', '3to5' ); ?></a></li>
                     <li><a href="#faq"><?php esc_html_e( 'FAQ', '3to5' ); ?></a></li>
                     <li><a href="#contact"><?php esc_html_e( 'Contact', '3to5' ); ?></a></li>
+                    <?php if ( get_theme_mod( '3to5_donation_stripe_enable', true ) ) : ?>
+                        <li class="menu-item-donate"><a href="#donate"><?php esc_html_e( 'Donate', '3to5' ); ?></a></li>
+                    <?php endif; ?>
                 </ul>
                 <?php
             }

@@ -199,6 +199,26 @@ img {
     width: 100%;
 }
 
+/* Donate Menu Item - Highlighted */
+.menu-item-donate a {
+    background-color: var(--color-secondary);
+    color: var(--color-primary) !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu-item-donate a:hover,
+.menu-item-donate a:focus {
+    background-color: var(--color-primary);
+    color: white !important;
+}
+
+.menu-item-donate a::after {
+    display: none;
+}
+
 /* Mobile Navigation Toggle */
 .menu-toggle {
     display: none;
