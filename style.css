@@ -202,7 +202,7 @@ img {
 /* Donate Menu Item - Highlighted */
 .menu-item-donate a {
     background-color: var(--color-secondary);
-    color: var(--color-primary) !important;
+    color: white!important;
     padding: 0.5rem 1rem !important;
     border-radius: 4px;
     font-weight: 600;
