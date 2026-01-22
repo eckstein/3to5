@@ -90,6 +90,24 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
         </div>
 
+<?php if ( get_theme_mod( '3to5_footer_donation_enable', true ) ) : ?>
+        <div class="footer__donate">
+            <div class="footer__donate-content">
+                <h4><?php echo esc_html( get_theme_mod( '3to5_footer_donation_title', __( 'Support the Campaign', '3to5' ) ) ); ?></h4>
+                <p><?php echo esc_html( get_theme_mod( '3to5_footer_donation_text', __( 'Every dollar helps us reach more voters and expand representation in Lewis County.', '3to5' ) ) ); ?></p>
+                <?php
+                $footer_donate_btn_text = get_theme_mod( '3to5_footer_donation_btn_text', __( 'Make a Donation', '3to5' ) );
+                $footer_donate_btn_link = get_theme_mod( '3to5_footer_donation_btn_link', get_theme_mod( '3to5_donation_stripe_btn_link', '#' ) );
+                if ( $footer_donate_btn_text && $footer_donate_btn_link ) :
+                ?>
+                <a href="<?php echo esc_url( $footer_donate_btn_link ); ?>" class="btn btn--footer-donate">
+                    <?php echo esc_html( $footer_donate_btn_text ); ?>
+                </a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <div class="footer__bottom">
             <p>
                 <?php echo wp_kses_post( get_theme_mod( '3to5_footer_text', __( 'Paid for by the 3 to 5 Campaign Committee.', '3to5' ) ) ); ?>

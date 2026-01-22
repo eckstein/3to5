@@ -552,6 +552,65 @@ function three_to_five_customize_register( $wp_customize ) {
     ) ) );
 
     // =========================================================================
+    // Section: Donation Stripe
+    // =========================================================================
+    $wp_customize->add_section( '3to5_donation', array(
+        'title'    => __( 'Donation Section', '3to5' ),
+        'panel'    => '3to5_campaign',
+        'priority' => 25,
+    ) );
+
+    // Donation Stripe Enable
+    $wp_customize->add_setting( '3to5_donation_stripe_enable', array(
+        'default'           => true,
+        'sanitize_callback' => 'three_to_five_sanitize_checkbox',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_donation_stripe_enable', array(
+        'label'       => __( 'Enable Donation Stripe', '3to5' ),
+        'description' => __( 'Shows a horizontal donation bar below the hero section.', '3to5' ),
+        'section'     => '3to5_donation',
+        'type'        => 'checkbox',
+    ) );
+
+    // Donation Stripe Text
+    $wp_customize->add_setting( '3to5_donation_stripe_text', array(
+        'default'           => __( 'Help us expand representation in Lewis County. Your donation makes a difference!', '3to5' ),
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( '3to5_donation_stripe_text', array(
+        'label'   => __( 'Stripe Text', '3to5' ),
+        'section' => '3to5_donation',
+        'type'    => 'textarea',
+    ) );
+
+    // Donation Stripe Button Text
+    $wp_customize->add_setting( '3to5_donation_stripe_btn_text', array(
+        'default'           => __( 'Donate Now', '3to5' ),
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( '3to5_donation_stripe_btn_text', array(
+        'label'   => __( 'Button Text', '3to5' ),
+        'section' => '3to5_donation',
+        'type'    => 'text',
+    ) );
+
+    // Donation Stripe Button Link
+    $wp_customize->add_setting( '3to5_donation_stripe_btn_link', array(
+        'default'           => '#',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( '3to5_donation_stripe_btn_link', array(
+        'label'       => __( 'Donation Link', '3to5' ),
+        'description' => __( 'URL to your donation page (e.g., ActBlue, PayPal, etc.)', '3to5' ),
+        'section'     => '3to5_donation',
+        'type'        => 'url',
+    ) );
+
+    // =========================================================================
     // Section: Reasons/Benefits
     // =========================================================================
     $wp_customize->add_section( '3to5_reasons', array(
@@ -1139,6 +1198,68 @@ function three_to_five_customize_register( $wp_customize ) {
         'title'    => __( 'Footer Settings', '3to5' ),
         'panel'    => '3to5_campaign',
         'priority' => 90,
+    ) );
+
+    // Footer Donation Enable
+    $wp_customize->add_setting( '3to5_footer_donation_enable', array(
+        'default'           => true,
+        'sanitize_callback' => 'three_to_five_sanitize_checkbox',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_footer_donation_enable', array(
+        'label'       => __( 'Enable Footer Donation Section', '3to5' ),
+        'description' => __( 'Shows a donation call-to-action in the footer.', '3to5' ),
+        'section'     => '3to5_footer',
+        'type'        => 'checkbox',
+    ) );
+
+    // Footer Donation Title
+    $wp_customize->add_setting( '3to5_footer_donation_title', array(
+        'default'           => __( 'Support the Campaign', '3to5' ),
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( '3to5_footer_donation_title', array(
+        'label'   => __( 'Footer Donation Title', '3to5' ),
+        'section' => '3to5_footer',
+        'type'    => 'text',
+    ) );
+
+    // Footer Donation Text
+    $wp_customize->add_setting( '3to5_footer_donation_text', array(
+        'default'           => __( 'Every dollar helps us reach more voters and expand representation in Lewis County.', '3to5' ),
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( '3to5_footer_donation_text', array(
+        'label'   => __( 'Footer Donation Text', '3to5' ),
+        'section' => '3to5_footer',
+        'type'    => 'textarea',
+    ) );
+
+    // Footer Donation Button Text
+    $wp_customize->add_setting( '3to5_footer_donation_btn_text', array(
+        'default'           => __( 'Make a Donation', '3to5' ),
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( '3to5_footer_donation_btn_text', array(
+        'label'   => __( 'Button Text', '3to5' ),
+        'section' => '3to5_footer',
+        'type'    => 'text',
+    ) );
+
+    // Footer Donation Button Link (optional, defaults to stripe link)
+    $wp_customize->add_setting( '3to5_footer_donation_btn_link', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( '3to5_footer_donation_btn_link', array(
+        'label'       => __( 'Button Link (Optional)', '3to5' ),
+        'description' => __( 'Leave blank to use the same link as the donation stripe.', '3to5' ),
+        'section'     => '3to5_footer',
+        'type'        => 'url',
     ) );
 
     // Footer Text

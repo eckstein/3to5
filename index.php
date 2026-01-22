@@ -121,6 +121,29 @@ if ( $hero_video_enable && $hero_video_url ) {
     </div>
 </section>
 
+<?php // ======================== DONATION STRIPE ======================== ?>
+<?php if ( get_theme_mod( '3to5_donation_stripe_enable', true ) ) : ?>
+<section class="donation-stripe" id="donate">
+    <div class="container">
+        <div class="donation-stripe__inner">
+            <div class="donation-stripe__text">
+                <span class="donation-stripe__icon" aria-hidden="true">&#10084;</span>
+                <p><?php echo esc_html( get_theme_mod( '3to5_donation_stripe_text', __( 'Help us expand representation in Lewis County. Your donation makes a difference!', '3to5' ) ) ); ?></p>
+            </div>
+            <?php
+            $donate_btn_text = get_theme_mod( '3to5_donation_stripe_btn_text', __( 'Donate Now', '3to5' ) );
+            $donate_btn_link = get_theme_mod( '3to5_donation_stripe_btn_link', '#' );
+            if ( $donate_btn_text && $donate_btn_link ) :
+            ?>
+            <a href="<?php echo esc_url( $donate_btn_link ); ?>" class="btn btn--donate">
+                <?php echo esc_html( $donate_btn_text ); ?>
+            </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <?php // ======================== ABOUT SECTION ======================== ?>
 <?php if ( get_theme_mod( '3to5_about_enable', true ) ) : ?>
 <section class="about section" id="about">
