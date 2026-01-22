@@ -134,22 +134,56 @@
         });
     });
 
-    // Location cards (1-4)
-    for (var k = 1; k <= 4; k++) {
-        (function(index) {
-            wp.customize('3to5_location_' + index + '_name', function(value) {
-                value.bind(function(newval) {
-                    $('.location-card').eq(index - 1).find('.location-card__name').text(newval);
-                });
+    // Location items (dynamic repeater)
+    wp.customize('3to5_location_items', function(value) {
+        value.bind(function(newval) {
+            var locations = [];
+
+            // Parse JSON if string
+            if (typeof newval === 'string') {
+                try {
+                    locations = JSON.parse(newval);
+                } catch (e) {
+                    locations = [];
+                }
+            } else if (Array.isArray(newval)) {
+                locations = newval;
+            }
+
+            var $locationsList = $('.locations__list');
+
+            // If locations section doesn't exist and we have locations, we need a refresh
+            if ($locationsList.length === 0 && locations.length > 0) {
+                return;
+            }
+
+            // Clear existing location items
+            $locationsList.empty();
+
+            // Add new location items
+            locations.forEach(function(location, index) {
+                if (location.name) {
+                    var $item = $(
+                        '<article class="location-card" data-location-index="' + index + '">' +
+                            '<h3 class="location-card__name">' + escapeHtml(location.name) + '</h3>' +
+                            (location.address ? '<p class="location-card__address">' + escapeHtml(location.address) + '</p>' : '') +
+                            (location.hours ? '<p class="location-card__hours"><strong>Hours:</strong> ' + escapeHtml(location.hours) + '</p>' : '') +
+                        '</article>'
+                    );
+
+                    $locationsList.append($item);
+                }
             });
 
-            wp.customize('3to5_location_' + index + '_address', function(value) {
-                value.bind(function(newval) {
-                    $('.location-card').eq(index - 1).find('.location-card__address').text(newval);
-                });
-            });
-        })(k);
-    }
+            // Show/hide the entire locations section based on content
+            var $locationsSection = $('.locations.section');
+            if (locations.length === 0 || !locations.some(function(l) { return l.name; })) {
+                $locationsSection.hide();
+            } else {
+                $locationsSection.show();
+            }
+        });
+    });
 
     // =========================================================================
     // FAQ Section

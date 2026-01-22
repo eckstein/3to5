@@ -278,9 +278,11 @@ if ( $action_bg ) {
 <?php // ======================== LOCATIONS SECTION ======================== ?>
 <?php if ( get_theme_mod( '3to5_locations_enable', true ) ) : ?>
 <?php
+$location_items = three_to_five_get_location_items();
 $has_locations = false;
-for ( $i = 1; $i <= 4; $i++ ) {
-    if ( get_theme_mod( "3to5_location_{$i}_name" ) ) {
+
+foreach ( $location_items as $location ) {
+    if ( ! empty( $location['name'] ) ) {
         $has_locations = true;
         break;
     }
@@ -293,26 +295,21 @@ if ( $has_locations ) :
         <h2 class="text-center"><?php echo esc_html( get_theme_mod( '3to5_locations_title', __( 'Where to Sign', '3to5' ) ) ); ?></h2>
 
         <div class="locations__list">
-            <?php
-            for ( $i = 1; $i <= 4; $i++ ) :
-                $name    = get_theme_mod( "3to5_location_{$i}_name" );
-                $address = get_theme_mod( "3to5_location_{$i}_address" );
-                $hours   = get_theme_mod( "3to5_location_{$i}_hours" );
-
-                if ( $name ) :
+            <?php foreach ( $location_items as $index => $location ) :
+                if ( ! empty( $location['name'] ) ) :
             ?>
-                <article class="location-card">
-                    <h3 class="location-card__name"><?php echo esc_html( $name ); ?></h3>
-                    <?php if ( $address ) : ?>
-                        <p class="location-card__address"><?php echo esc_html( $address ); ?></p>
+                <article class="location-card" data-location-index="<?php echo esc_attr( $index ); ?>">
+                    <h3 class="location-card__name"><?php echo esc_html( $location['name'] ); ?></h3>
+                    <?php if ( ! empty( $location['address'] ) ) : ?>
+                        <p class="location-card__address"><?php echo esc_html( $location['address'] ); ?></p>
                     <?php endif; ?>
-                    <?php if ( $hours ) : ?>
-                        <p class="location-card__hours"><strong><?php esc_html_e( 'Hours:', '3to5' ); ?></strong> <?php echo esc_html( $hours ); ?></p>
+                    <?php if ( ! empty( $location['hours'] ) ) : ?>
+                        <p class="location-card__hours"><strong><?php esc_html_e( 'Hours:', '3to5' ); ?></strong> <?php echo esc_html( $location['hours'] ); ?></p>
                     <?php endif; ?>
                 </article>
             <?php
                 endif;
-            endfor;
+            endforeach;
             ?>
         </div>
     </div>

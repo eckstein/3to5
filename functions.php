@@ -38,15 +38,15 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
          */
         public function enqueue() {
             wp_enqueue_script(
-                '3to5-customizer-faq',
-                THREE_TO_FIVE_URI . '/assets/js/customizer-faq.js',
+                '3to5-customizer-repeaters',
+                THREE_TO_FIVE_URI . '/assets/js/customizer-repeaters.js',
                 array( 'jquery', 'customize-controls', 'jquery-ui-sortable' ),
                 THREE_TO_FIVE_VERSION,
                 true
             );
             wp_enqueue_style(
-                '3to5-customizer-faq',
-                THREE_TO_FIVE_URI . '/assets/css/customizer-faq.css',
+                '3to5-customizer-repeaters',
+                THREE_TO_FIVE_URI . '/assets/css/customizer-repeaters.css',
                 array(),
                 THREE_TO_FIVE_VERSION
             );
@@ -102,6 +102,95 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
                 </div>
 
                 <button type="button" class="button faq-repeater-add"><?php esc_html_e( 'Add FAQ', '3to5' ); ?></button>
+            </div>
+            <?php
+        }
+    }
+
+    /**
+     * Custom Control: Locations Repeater
+     */
+    class Three_To_Five_Locations_Repeater_Control extends WP_Customize_Control {
+        /**
+         * Control type
+         *
+         * @var string
+         */
+        public $type = 'locations_repeater';
+
+        /**
+         * Enqueue scripts and styles
+         */
+        public function enqueue() {
+            wp_enqueue_script(
+                '3to5-customizer-repeaters',
+                THREE_TO_FIVE_URI . '/assets/js/customizer-repeaters.js',
+                array( 'jquery', 'customize-controls', 'jquery-ui-sortable' ),
+                THREE_TO_FIVE_VERSION,
+                true
+            );
+            wp_enqueue_style(
+                '3to5-customizer-repeaters',
+                THREE_TO_FIVE_URI . '/assets/css/customizer-repeaters.css',
+                array(),
+                THREE_TO_FIVE_VERSION
+            );
+        }
+
+        /**
+         * Render the control content
+         */
+        public function render_content() {
+            $locations = $this->value();
+            if ( ! is_array( $locations ) ) {
+                $locations = json_decode( $locations, true );
+            }
+            if ( ! is_array( $locations ) ) {
+                $locations = array();
+            }
+            ?>
+            <div class="locations-repeater-control">
+                <?php if ( ! empty( $this->label ) ) : ?>
+                    <span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
+                <?php endif; ?>
+                <?php if ( ! empty( $this->description ) ) : ?>
+                    <span class="description customize-control-description"><?php echo esc_html( $this->description ); ?></span>
+                <?php endif; ?>
+
+                <input type="hidden" class="locations-repeater-value" <?php $this->link(); ?> value="<?php echo esc_attr( wp_json_encode( $locations ) ); ?>">
+
+                <div class="locations-repeater-items" data-setting-id="<?php echo esc_attr( $this->id ); ?>">
+                    <?php foreach ( $locations as $index => $location ) : ?>
+                        <div class="locations-repeater-item" data-index="<?php echo esc_attr( $index ); ?>">
+                            <div class="locations-repeater-item-header">
+                                <span class="locations-repeater-item-title"><?php echo esc_html( ! empty( $location['name'] ) ? $location['name'] : __( 'New Location', '3to5' ) ); ?></span>
+                                <button type="button" class="locations-repeater-toggle" aria-expanded="false">
+                                    <span class="screen-reader-text"><?php esc_html_e( 'Toggle', '3to5' ); ?></span>
+                                    <span class="dashicons dashicons-arrow-down-alt2"></span>
+                                </button>
+                            </div>
+                            <div class="locations-repeater-item-content" style="display: none;">
+                                <p>
+                                    <label><?php esc_html_e( 'Name', '3to5' ); ?></label>
+                                    <input type="text" class="location-name widefat" value="<?php echo esc_attr( $location['name'] ?? '' ); ?>">
+                                </p>
+                                <p>
+                                    <label><?php esc_html_e( 'Address', '3to5' ); ?></label>
+                                    <input type="text" class="location-address widefat" value="<?php echo esc_attr( $location['address'] ?? '' ); ?>">
+                                </p>
+                                <p>
+                                    <label><?php esc_html_e( 'Hours', '3to5' ); ?></label>
+                                    <input type="text" class="location-hours widefat" value="<?php echo esc_attr( $location['hours'] ?? '' ); ?>">
+                                </p>
+                                <p class="locations-repeater-item-actions">
+                                    <button type="button" class="button locations-repeater-remove"><?php esc_html_e( 'Remove', '3to5' ); ?></button>
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <button type="button" class="button locations-repeater-add"><?php esc_html_e( 'Add Location', '3to5' ); ?></button>
             </div>
             <?php
         }
@@ -742,41 +831,17 @@ function three_to_five_customize_register( $wp_customize ) {
         'type'    => 'text',
     ) );
 
-    // Locations (up to 4)
-    for ( $i = 1; $i <= 4; $i++ ) {
-        $wp_customize->add_setting( "3to5_location_{$i}_name", array(
-            'default'           => '',
-            'sanitize_callback' => 'sanitize_text_field',
-            'transport'         => 'postMessage',
-        ) );
-        $wp_customize->add_control( "3to5_location_{$i}_name", array(
-            'label'   => sprintf( __( 'Location %d Name', '3to5' ), $i ),
-            'section' => '3to5_locations',
-            'type'    => 'text',
-        ) );
-
-        $wp_customize->add_setting( "3to5_location_{$i}_address", array(
-            'default'           => '',
-            'sanitize_callback' => 'sanitize_text_field',
-            'transport'         => 'postMessage',
-        ) );
-        $wp_customize->add_control( "3to5_location_{$i}_address", array(
-            'label'   => sprintf( __( 'Location %d Address', '3to5' ), $i ),
-            'section' => '3to5_locations',
-            'type'    => 'text',
-        ) );
-
-        $wp_customize->add_setting( "3to5_location_{$i}_hours", array(
-            'default'           => '',
-            'sanitize_callback' => 'sanitize_text_field',
-            'transport'         => 'postMessage',
-        ) );
-        $wp_customize->add_control( "3to5_location_{$i}_hours", array(
-            'label'   => sprintf( __( 'Location %d Hours', '3to5' ), $i ),
-            'section' => '3to5_locations',
-            'type'    => 'text',
-        ) );
-    }
+    // Locations Repeater (dynamic)
+    $wp_customize->add_setting( '3to5_location_items', array(
+        'default'           => '[]',
+        'sanitize_callback' => 'three_to_five_sanitize_location_items',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new Three_To_Five_Locations_Repeater_Control( $wp_customize, '3to5_location_items', array(
+        'label'       => __( 'Signing Locations', '3to5' ),
+        'description' => __( 'Add, edit, remove, and reorder your signing locations.', '3to5' ),
+        'section'     => '3to5_locations',
+    ) ) );
 
     // =========================================================================
     // Section: FAQ
@@ -1169,6 +1234,52 @@ function three_to_five_get_faq_items() {
     }
 
     return $faqs;
+}
+
+/**
+ * Sanitize location items (JSON array)
+ */
+function three_to_five_sanitize_location_items( $input ) {
+    if ( is_string( $input ) ) {
+        $input = json_decode( $input, true );
+    }
+
+    if ( ! is_array( $input ) ) {
+        return '[]';
+    }
+
+    $sanitized = array();
+    foreach ( $input as $item ) {
+        if ( ! is_array( $item ) ) {
+            continue;
+        }
+        $sanitized[] = array(
+            'name'    => isset( $item['name'] ) ? sanitize_text_field( $item['name'] ) : '',
+            'address' => isset( $item['address'] ) ? sanitize_text_field( $item['address'] ) : '',
+            'hours'   => isset( $item['hours'] ) ? sanitize_text_field( $item['hours'] ) : '',
+        );
+    }
+
+    return wp_json_encode( $sanitized );
+}
+
+/**
+ * Get location items as array
+ */
+function three_to_five_get_location_items() {
+    $default_locations = array();
+
+    $locations = get_theme_mod( '3to5_location_items', wp_json_encode( $default_locations ) );
+
+    if ( is_string( $locations ) ) {
+        $locations = json_decode( $locations, true );
+    }
+
+    if ( ! is_array( $locations ) ) {
+        return $default_locations;
+    }
+
+    return $locations;
 }
 
 /**
