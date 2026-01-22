@@ -97,8 +97,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <p><?php echo esc_html( get_theme_mod( '3to5_footer_donation_text', __( 'Every dollar helps us reach more voters and expand representation in Lewis County.', '3to5' ) ) ); ?></p>
                 <?php
                 $footer_donate_btn_text = get_theme_mod( '3to5_footer_donation_btn_text', __( 'Make a Donation', '3to5' ) );
-                $footer_donate_btn_link = get_theme_mod( '3to5_footer_donation_btn_link', get_theme_mod( '3to5_donation_stripe_btn_link', '#' ) );
-                if ( $footer_donate_btn_text && $footer_donate_btn_link ) :
+                $footer_donate_btn_link = get_theme_mod( '3to5_footer_donation_btn_link', '' );
+                // Fall back to donation stripe link if footer link is empty
+                if ( empty( $footer_donate_btn_link ) ) {
+                    $footer_donate_btn_link = get_theme_mod( '3to5_donation_stripe_btn_link', '#' );
+                }
+                if ( $footer_donate_btn_text ) :
                 ?>
                 <a href="<?php echo esc_url( $footer_donate_btn_link ); ?>" class="btn btn--footer-donate">
                     <?php echo esc_html( $footer_donate_btn_text ); ?>

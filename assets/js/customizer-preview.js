@@ -47,6 +47,33 @@
     });
 
     // =========================================================================
+    // Donation Stripe
+    // =========================================================================
+
+    wp.customize('3to5_donation_stripe_text', function(value) {
+        value.bind(function(newval) {
+            $('.donation-stripe__text p').text(newval);
+        });
+    });
+
+    wp.customize('3to5_donation_stripe_btn_text', function(value) {
+        value.bind(function(newval) {
+            $('.btn--donate').text(newval);
+        });
+    });
+
+    wp.customize('3to5_donation_stripe_btn_link', function(value) {
+        value.bind(function(newval) {
+            $('.btn--donate').attr('href', newval);
+            // Also update footer button if it's using the default
+            var $footerBtn = $('.btn--footer-donate');
+            if ($footerBtn.length && !wp.customize('3to5_footer_donation_btn_link').get()) {
+                $footerBtn.attr('href', newval);
+            }
+        });
+    });
+
+    // =========================================================================
     // About Section
     // =========================================================================
 
@@ -80,12 +107,6 @@
             wp.customize('3to5_reason_' + index + '_text', function(value) {
                 value.bind(function(newval) {
                     $('.reason-card').eq(index - 1).find('.reason-card__text').text(newval);
-                });
-            });
-            // Reason graphic
-            wp.customize('3to5_reason_' + index + '_graphic', function(value) {
-                value.bind(function(newval) {
-                    $('.reason-card').eq(index - 1).find('.reason-card__graphic').attr('src', newval);
                 });
             });
         })(i);
@@ -274,6 +295,36 @@
     // =========================================================================
     // Footer
     // =========================================================================
+
+    wp.customize('3to5_footer_donation_title', function(value) {
+        value.bind(function(newval) {
+            $('.footer__donate-content h4').text(newval);
+        });
+    });
+
+    wp.customize('3to5_footer_donation_text', function(value) {
+        value.bind(function(newval) {
+            $('.footer__donate-content p').text(newval);
+        });
+    });
+
+    wp.customize('3to5_footer_donation_btn_text', function(value) {
+        value.bind(function(newval) {
+            $('.btn--footer-donate').text(newval);
+        });
+    });
+
+    wp.customize('3to5_footer_donation_btn_link', function(value) {
+        value.bind(function(newval) {
+            if (newval) {
+                $('.btn--footer-donate').attr('href', newval);
+            } else {
+                // Fall back to stripe link
+                var stripeLink = wp.customize('3to5_donation_stripe_btn_link').get() || '#';
+                $('.btn--footer-donate').attr('href', stripeLink);
+            }
+        });
+    });
 
     wp.customize('3to5_footer_text', function(value) {
         value.bind(function(newval) {

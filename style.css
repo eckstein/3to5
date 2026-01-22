@@ -850,9 +850,9 @@ img {
 }
 
 .btn--footer-donate {
-    background-color: var(--color-secondary);
+    background-color: white;
     color: var(--color-primary);
-    border-color: var(--color-secondary);
+    border: 2px solid white;
     display: inline-block;
     padding: 0.875rem 2rem;
     font-weight: 600;
@@ -860,8 +860,9 @@ img {
 
 .btn--footer-donate:hover,
 .btn--footer-donate:focus {
-    background-color: transparent;
-    color: var(--color-secondary);
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+    border-color: var(--color-secondary);
 }
 
 .footer__bottom {
