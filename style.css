@@ -399,7 +399,7 @@ img {
 
 .btn--primary {
     background-color: var(--color-secondary);
-    color: var(--color-primary);
+    color: white;
     border-color: var(--color-secondary);
 }
 
@@ -461,7 +461,7 @@ img {
     margin: 0;
     font-size: 1.125rem;
     font-weight: 500;
-    color: var(--color-primary);
+    color: white;
 }
 
 .btn--donate {
@@ -650,7 +650,7 @@ img {
     padding: 0.75rem 1.5rem;
     font-size: 0.875rem;
     background-color: var(--color-secondary);
-    color: var(--color-primary);
+    color: white;
     border: 2px solid var(--color-secondary);
     border-radius: 4px;
     text-decoration: none;
