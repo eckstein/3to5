@@ -39,6 +39,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <?php
                 }
                 ?>
+                <button type="button" class="btn btn--footer-updates" data-open-email-modal>
+                    <?php esc_html_e( 'Get Updates', '3to5' ); ?>
+                </button>
             </div>
 
             <div class="footer__contact">

@@ -1201,6 +1201,215 @@ img {
 }
 
 /* ==========================================================================
+   Email Opt-in Modal
+   ========================================================================== */
+
+.email-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.email-modal.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.email-modal__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+.email-modal__content {
+    position: relative;
+    background-color: white;
+    border-radius: 12px;
+    padding: var(--spacing-md);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: hidden;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.email-modal.is-active .email-modal__content {
+    transform: translateY(0);
+}
+
+.email-modal__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--color-text-light);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.3s ease;
+    z-index: 1;
+}
+
+.email-modal__close:hover,
+.email-modal__close:focus {
+    color: var(--color-primary);
+}
+
+.email-modal__title {
+    margin-bottom: var(--spacing-xs);
+    font-size: 1.5rem;
+    text-align: center;
+    padding-right: 2rem;
+}
+
+.email-modal__subtitle {
+    text-align: center;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-sm);
+}
+
+.email-modal__iframe-container {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+}
+
+.email-modal__iframe-container iframe {
+    position: absolute;
+    border: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ==========================================================================
+   Sticky Get Updates Button
+   ========================================================================== */
+
+.sticky-updates-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--color-secondary);
+    color: white;
+    border: none;
+    padding: 0.875rem 1.25rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sticky-updates-btn:hover,
+.sticky-updates-btn:focus {
+    background-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+}
+
+.sticky-updates-btn__icon {
+    font-size: 1.2rem;
+}
+
+/* Hide sticky button on mobile */
+@media (max-width: 768px) {
+    .sticky-updates-btn {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   Footer Updates Button
+   ========================================================================== */
+
+.btn--footer-updates {
+    margin-top: var(--spacing-sm);
+    background-color: var(--color-secondary);
+    color: white;
+    border: 2px solid var(--color-secondary);
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+}
+
+.btn--footer-updates:hover,
+.btn--footer-updates:focus {
+    background-color: white;
+    color: var(--color-secondary);
+}
+
+/* ==========================================================================
+   Contact Section Updates Button
+   ========================================================================== */
+
+.contact__volunteer-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.contact__volunteer-buttons .btn--secondary {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.contact__volunteer-buttons .btn--secondary:hover,
+.contact__volunteer-buttons .btn--secondary:focus {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+@media (max-width: 480px) {
+    .contact__volunteer-buttons {
+        flex-direction: column;
+    }
+
+    .contact__volunteer-buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .email-modal__content {
+        padding: var(--spacing-sm);
+    }
+
+    .email-modal__iframe-container {
+        height: 400px;
+    }
+}
+
+/* ==========================================================================
    Print Styles
    ========================================================================== */
 
@@ -1208,7 +1417,9 @@ img {
     .site-header,
     .btn,
     .menu-toggle,
-    .social-links {
+    .social-links,
+    .email-modal,
+    .sticky-updates-btn {
         display: none !important;
     }
 

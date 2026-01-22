@@ -468,15 +468,45 @@ if ( $has_faqs ) :
                 <?php if ( $volunteer_text ) : ?>
                     <p><?php echo esc_html( $volunteer_text ); ?></p>
                 <?php endif; ?>
-                <?php if ( $volunteer_btn_text && $volunteer_btn_link ) : ?>
-                    <a href="<?php echo esc_url( $volunteer_btn_link ); ?>" class="btn btn--primary"<?php if ( $volunteer_btn_newtab ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>>
-                        <?php echo esc_html( $volunteer_btn_text ); ?>
-                    </a>
-                <?php endif; ?>
+                <div class="contact__volunteer-buttons">
+                    <?php if ( $volunteer_btn_text && $volunteer_btn_link ) : ?>
+                        <a href="<?php echo esc_url( $volunteer_btn_link ); ?>" class="btn btn--primary"<?php if ( $volunteer_btn_newtab ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>>
+                            <?php echo esc_html( $volunteer_btn_text ); ?>
+                        </a>
+                    <?php endif; ?>
+                    <button type="button" class="btn btn--secondary btn--updates" data-open-email-modal>
+                        <?php esc_html_e( 'Get Updates', '3to5' ); ?>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </section>
 <?php endif; ?>
+
+<?php // ======================== EMAIL OPT-IN MODAL ======================== ?>
+<div class="email-modal" id="email-modal" aria-hidden="true" role="dialog" aria-labelledby="email-modal-title" aria-modal="true">
+    <div class="email-modal__overlay" data-close-email-modal></div>
+    <div class="email-modal__content">
+        <button type="button" class="email-modal__close" data-close-email-modal aria-label="<?php esc_attr_e( 'Close modal', '3to5' ); ?>">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h2 id="email-modal-title" class="email-modal__title"><?php esc_html_e( 'Get Email Updates', '3to5' ); ?></h2>
+        <p class="email-modal__subtitle"><?php esc_html_e( 'Stay informed about our progress and ways to help.', '3to5' ); ?></p>
+        <div class="email-modal__iframe-container">
+            <iframe
+                title="<?php esc_attr_e( 'Signup form powered by Zeffy', '3to5' ); ?>"
+                src="https://www.zeffy.com/en-US/embed/newsletter-form/get-email-updates-on-our-progress"
+                allowtransparency="true"
+            ></iframe>
+        </div>
+    </div>
+</div>
+
+<?php // ======================== STICKY GET UPDATES BUTTON ======================== ?>
+<button type="button" class="sticky-updates-btn" data-open-email-modal aria-label="<?php esc_attr_e( 'Get Updates', '3to5' ); ?>">
+    <span class="sticky-updates-btn__icon" aria-hidden="true">&#9993;</span>
+    <span class="sticky-updates-btn__text"><?php esc_html_e( 'Get Updates', '3to5' ); ?></span>
+</button>
 
 <?php get_footer(); ?>

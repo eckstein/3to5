@@ -170,6 +170,80 @@
     }
 
     /**
+     * Email Opt-in Modal
+     */
+    function initEmailModal() {
+        const modal = document.getElementById('email-modal');
+        if (!modal) return;
+
+        const openButtons = document.querySelectorAll('[data-open-email-modal]');
+        const closeButtons = document.querySelectorAll('[data-close-email-modal]');
+
+        function openModal() {
+            modal.classList.add('is-active');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+
+            // Focus the close button for accessibility
+            const closeBtn = modal.querySelector('.email-modal__close');
+            if (closeBtn) {
+                closeBtn.focus();
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('is-active');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        // Open modal buttons
+        openButtons.forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal();
+            });
+        });
+
+        // Close modal buttons and overlay
+        closeButtons.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                closeModal();
+            });
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+                closeModal();
+            }
+        });
+
+        // Trap focus inside modal when open
+        modal.addEventListener('keydown', function(e) {
+            if (e.key !== 'Tab') return;
+
+            const focusableElements = modal.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === firstElement) {
+                    lastElement.focus();
+                    e.preventDefault();
+                }
+            } else {
+                if (document.activeElement === lastElement) {
+                    firstElement.focus();
+                    e.preventDefault();
+                }
+            }
+        });
+    }
+
+    /**
      * Initialize all components
      */
     function init() {
@@ -178,6 +252,7 @@
         initFaqAccordion();
         initHeaderScroll();
         initScrollAnimations();
+        initEmailModal();
     }
 
     // Run on DOM ready
