@@ -288,9 +288,10 @@ foreach ( $location_items as $location ) {
     }
 }
 
-if ( $has_locations ) :
+// Always render section structure for customizer live preview support
+$locations_style = $has_locations ? '' : ' style="display: none;"';
 ?>
-<section class="locations section section--alt" id="locations">
+<section class="locations section section--alt" id="locations"<?php echo $locations_style; ?>>
     <div class="container">
         <h2 class="text-center"><?php echo esc_html( get_theme_mod( '3to5_locations_title', __( 'Where to Sign', '3to5' ) ) ); ?></h2>
 
@@ -314,7 +315,6 @@ if ( $has_locations ) :
         </div>
     </div>
 </section>
-<?php endif; ?>
 <?php endif; ?>
 
 <?php // ======================== FAQ SECTION ======================== ?>
