@@ -417,6 +417,18 @@ function three_to_five_customize_register( $wp_customize ) {
         'type'    => 'url',
     ) );
 
+    // Hero CTA New Tab
+    $wp_customize->add_setting( '3to5_hero_cta_newtab', array(
+        'default'           => false,
+        'sanitize_callback' => 'three_to_five_sanitize_checkbox',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_hero_cta_newtab', array(
+        'label'   => __( 'Open in new tab', '3to5' ),
+        'section' => '3to5_hero',
+        'type'    => 'checkbox',
+    ) );
+
     // Hero Secondary CTA Text
     $wp_customize->add_setting( '3to5_hero_cta2_text', array(
         'default'           => __( 'Learn More', '3to5' ),
@@ -439,6 +451,18 @@ function three_to_five_customize_register( $wp_customize ) {
         'label'   => __( 'Secondary Button Link', '3to5' ),
         'section' => '3to5_hero',
         'type'    => 'url',
+    ) );
+
+    // Hero Secondary CTA New Tab
+    $wp_customize->add_setting( '3to5_hero_cta2_newtab', array(
+        'default'           => false,
+        'sanitize_callback' => 'three_to_five_sanitize_checkbox',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_hero_cta2_newtab', array(
+        'label'   => __( 'Open in new tab', '3to5' ),
+        'section' => '3to5_hero',
+        'type'    => 'checkbox',
     ) );
 
     // Hero Video Enable
@@ -608,6 +632,19 @@ function three_to_five_customize_register( $wp_customize ) {
         'description' => __( 'URL to your donation page (e.g., ActBlue, PayPal, etc.)', '3to5' ),
         'section'     => '3to5_donation',
         'type'        => 'url',
+    ) );
+
+    // Donation Stripe New Tab
+    $wp_customize->add_setting( '3to5_donation_stripe_newtab', array(
+        'default'           => false,
+        'sanitize_callback' => 'three_to_five_sanitize_checkbox',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_donation_stripe_newtab', array(
+        'label'       => __( 'Open in new tab', '3to5' ),
+        'description' => __( 'Also applies to the footer donation button.', '3to5' ),
+        'section'     => '3to5_donation',
+        'type'        => 'checkbox',
     ) );
 
     // =========================================================================
@@ -845,6 +882,18 @@ function three_to_five_customize_register( $wp_customize ) {
             'section' => '3to5_action',
             'type'    => 'url',
         ) );
+
+        // Step New Tab
+        $wp_customize->add_setting( "3to5_step_{$i}_btn_newtab", array(
+            'default'           => false,
+            'sanitize_callback' => 'three_to_five_sanitize_checkbox',
+            'transport'         => 'refresh',
+        ) );
+        $wp_customize->add_control( "3to5_step_{$i}_btn_newtab", array(
+            'label'   => sprintf( __( 'Step %d: Open in new tab', '3to5' ), $i ),
+            'section' => '3to5_action',
+            'type'    => 'checkbox',
+        ) );
     }
 
     // Set default steps
@@ -1081,6 +1130,18 @@ function three_to_five_customize_register( $wp_customize ) {
         'description' => __( 'Leave blank to use a mailto link with the contact email.', '3to5' ),
         'section'     => '3to5_contact',
         'type'        => 'url',
+    ) );
+
+    // Volunteer Button New Tab
+    $wp_customize->add_setting( '3to5_volunteer_btn_newtab', array(
+        'default'           => false,
+        'sanitize_callback' => 'three_to_five_sanitize_checkbox',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( '3to5_volunteer_btn_newtab', array(
+        'label'   => __( 'Open in new tab', '3to5' ),
+        'section' => '3to5_contact',
+        'type'    => 'checkbox',
     ) );
 
     // =========================================================================

@@ -52,13 +52,13 @@ if ( $hero_video_enable && $hero_video_url ) {
 
         <div class="hero__buttons">
             <?php if ( $cta_text && $cta_link ) : ?>
-                <a href="<?php echo esc_url( $cta_link ); ?>" class="btn btn--primary btn--large">
+                <a href="<?php echo esc_url( $cta_link ); ?>" class="btn btn--primary btn--large"<?php if ( get_theme_mod( '3to5_hero_cta_newtab', false ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>>
                     <?php echo esc_html( $cta_text ); ?>
                 </a>
             <?php endif; ?>
 
             <?php if ( $cta2_text && $cta2_link ) : ?>
-                <a href="<?php echo esc_url( $cta2_link ); ?>" class="btn btn--secondary btn--large">
+                <a href="<?php echo esc_url( $cta2_link ); ?>" class="btn btn--secondary btn--large"<?php if ( get_theme_mod( '3to5_hero_cta2_newtab', false ) ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>>
                     <?php echo esc_html( $cta2_text ); ?>
                 </a>
             <?php endif; ?>
@@ -133,9 +133,10 @@ if ( $hero_video_enable && $hero_video_url ) {
             <?php
             $donate_btn_text = get_theme_mod( '3to5_donation_stripe_btn_text', __( 'Donate Now', '3to5' ) );
             $donate_btn_link = get_theme_mod( '3to5_donation_stripe_btn_link', '#' );
+            $donate_newtab   = get_theme_mod( '3to5_donation_stripe_newtab', false );
             if ( $donate_btn_text && $donate_btn_link ) :
             ?>
-            <a href="<?php echo esc_url( $donate_btn_link ); ?>" class="btn btn--donate">
+            <a href="<?php echo esc_url( $donate_btn_link ); ?>" class="btn btn--donate"<?php if ( $donate_newtab ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>>
                 <?php echo esc_html( $donate_btn_text ); ?>
             </a>
             <?php endif; ?>
@@ -272,10 +273,11 @@ if ( $action_bg ) {
             );
 
             for ( $i = 1; $i <= 3; $i++ ) :
-                $title    = get_theme_mod( "3to5_step_{$i}_title", $default_steps[ $i ]['title'] );
-                $text     = get_theme_mod( "3to5_step_{$i}_text", $default_steps[ $i ]['text'] );
-                $btn_text = get_theme_mod( "3to5_step_{$i}_btn_text", '' );
-                $btn_link = get_theme_mod( "3to5_step_{$i}_btn_link", '' );
+                $title      = get_theme_mod( "3to5_step_{$i}_title", $default_steps[ $i ]['title'] );
+                $text       = get_theme_mod( "3to5_step_{$i}_text", $default_steps[ $i ]['text'] );
+                $btn_text   = get_theme_mod( "3to5_step_{$i}_btn_text", '' );
+                $btn_link   = get_theme_mod( "3to5_step_{$i}_btn_link", '' );
+                $btn_newtab = get_theme_mod( "3to5_step_{$i}_btn_newtab", false );
 
                 if ( $title && $text ) :
             ?>
@@ -284,7 +286,7 @@ if ( $action_bg ) {
                     <h3 class="action-step__title"><?php echo esc_html( $title ); ?></h3>
                     <p class="action-step__text"><?php echo esc_html( $text ); ?></p>
                     <?php if ( $btn_text && $btn_link ) : ?>
-                        <a href="<?php echo esc_url( $btn_link ); ?>" class="btn btn--action-step">
+                        <a href="<?php echo esc_url( $btn_link ); ?>" class="btn btn--action-step"<?php if ( $btn_newtab ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>>
                             <?php echo esc_html( $btn_text ); ?>
                         </a>
                     <?php endif; ?>
@@ -448,10 +450,11 @@ if ( $has_faqs ) :
             </div>
 
             <?php
-            $volunteer_title    = get_theme_mod( '3to5_volunteer_title', __( 'Volunteer', '3to5' ) );
-            $volunteer_text     = get_theme_mod( '3to5_volunteer_text', __( 'Want to help gather signatures or spread the word? We need volunteers throughout Lewis County. Contact us to get involved!', '3to5' ) );
-            $volunteer_btn_text = get_theme_mod( '3to5_volunteer_btn_text', __( 'Become a Volunteer', '3to5' ) );
-            $volunteer_btn_link = get_theme_mod( '3to5_volunteer_btn_link', '' );
+            $volunteer_title      = get_theme_mod( '3to5_volunteer_title', __( 'Volunteer', '3to5' ) );
+            $volunteer_text       = get_theme_mod( '3to5_volunteer_text', __( 'Want to help gather signatures or spread the word? We need volunteers throughout Lewis County. Contact us to get involved!', '3to5' ) );
+            $volunteer_btn_text   = get_theme_mod( '3to5_volunteer_btn_text', __( 'Become a Volunteer', '3to5' ) );
+            $volunteer_btn_link   = get_theme_mod( '3to5_volunteer_btn_link', '' );
+            $volunteer_btn_newtab = get_theme_mod( '3to5_volunteer_btn_newtab', false );
 
             // Fall back to mailto if no custom link provided
             if ( empty( $volunteer_btn_link ) && $email ) {
@@ -466,7 +469,7 @@ if ( $has_faqs ) :
                     <p><?php echo esc_html( $volunteer_text ); ?></p>
                 <?php endif; ?>
                 <?php if ( $volunteer_btn_text && $volunteer_btn_link ) : ?>
-                    <a href="<?php echo esc_url( $volunteer_btn_link ); ?>" class="btn btn--primary">
+                    <a href="<?php echo esc_url( $volunteer_btn_link ); ?>" class="btn btn--primary"<?php if ( $volunteer_btn_newtab ) : ?> target="_blank" rel="noopener noreferrer"<?php endif; ?>>
                         <?php echo esc_html( $volunteer_btn_text ); ?>
                     </a>
                 <?php endif; ?>
