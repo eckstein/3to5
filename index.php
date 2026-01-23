@@ -233,39 +233,53 @@ if ( $hero_video_enable && $hero_video_url ) {
             ?>
         </div>
 
-        <?php // Quotes subsection ?>
+        <?php // Quotes carousel ?>
         <?php
         $quote_items = three_to_five_get_quote_items();
-        $has_quotes = false;
-        foreach ( $quote_items as $quote ) {
-            if ( ! empty( $quote['text'] ) ) {
-                $has_quotes = true;
-                break;
-            }
-        }
-        if ( $has_quotes ) :
+        $valid_quotes = array_filter( $quote_items, function( $q ) {
+            return ! empty( $q['text'] );
+        } );
+        $quote_count = count( $valid_quotes );
+
+        if ( $quote_count > 0 ) :
         ?>
-        <div class="quotes">
-            <div class="quotes__list">
-                <?php foreach ( $quote_items as $index => $quote ) :
-                    if ( ! empty( $quote['text'] ) ) :
-                ?>
-                    <blockquote class="quote-card" data-quote-index="<?php echo esc_attr( $index ); ?>">
-                        <p class="quote-card__text"><?php echo esc_html( $quote['text'] ); ?></p>
-                        <?php if ( ! empty( $quote['author'] ) ) : ?>
-                            <footer class="quote-card__footer">
-                                <cite class="quote-card__author"><?php echo esc_html( $quote['author'] ); ?></cite>
-                                <?php if ( ! empty( $quote['title'] ) ) : ?>
-                                    <span class="quote-card__title"><?php echo esc_html( $quote['title'] ); ?></span>
-                                <?php endif; ?>
-                            </footer>
-                        <?php endif; ?>
-                    </blockquote>
-                <?php
-                    endif;
-                endforeach;
-                ?>
+        <div class="quotes<?php echo $quote_count <= 2 ? ' quotes--no-scroll' : ''; ?>">
+            <div class="quotes__carousel">
+                <div class="quotes__track">
+                    <?php foreach ( $quote_items as $index => $quote ) :
+                        if ( ! empty( $quote['text'] ) ) :
+                    ?>
+                        <blockquote class="quote-card" data-quote-index="<?php echo esc_attr( $index ); ?>">
+                            <p class="quote-card__text"><?php echo esc_html( $quote['text'] ); ?></p>
+                            <?php if ( ! empty( $quote['author'] ) ) : ?>
+                                <footer class="quote-card__footer">
+                                    <cite class="quote-card__author"><?php echo esc_html( $quote['author'] ); ?></cite>
+                                    <?php if ( ! empty( $quote['title'] ) ) : ?>
+                                        <span class="quote-card__title"><?php echo esc_html( $quote['title'] ); ?></span>
+                                    <?php endif; ?>
+                                </footer>
+                            <?php endif; ?>
+                        </blockquote>
+                    <?php
+                        endif;
+                    endforeach;
+                    ?>
+                </div>
             </div>
+            <?php if ( $quote_count > 2 ) : ?>
+            <nav class="quotes__nav" aria-label="<?php esc_attr_e( 'Quote navigation', '3to5' ); ?>">
+                <button type="button" class="quotes__arrow quotes__arrow--prev" aria-label="<?php esc_attr_e( 'Previous quotes', '3to5' ); ?>">&#8249;</button>
+                <div class="quotes__dots">
+                    <?php
+                    $total_pages = ceil( $quote_count / 2 );
+                    for ( $i = 0; $i < $total_pages; $i++ ) :
+                    ?>
+                        <button type="button" class="quotes__dot<?php echo 0 === $i ? ' is-active' : ''; ?>" data-page="<?php echo esc_attr( $i ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Go to page %d', '3to5' ), $i + 1 ) ); ?>"></button>
+                    <?php endfor; ?>
+                </div>
+                <button type="button" class="quotes__arrow quotes__arrow--next" aria-label="<?php esc_attr_e( 'Next quotes', '3to5' ); ?>">&#8250;</button>
+            </nav>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
     </div>

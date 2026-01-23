@@ -244,6 +244,114 @@
     }
 
     /**
+     * Quotes Carousel
+     */
+    function initQuotesCarousel() {
+        const carousel = document.querySelector('.quotes__carousel');
+        if (!carousel) return;
+
+        const track = carousel.querySelector('.quotes__track');
+        const nav = document.querySelector('.quotes__nav');
+        if (!track) return;
+
+        const prevBtn = nav ? nav.querySelector('.quotes__arrow--prev') : null;
+        const nextBtn = nav ? nav.querySelector('.quotes__arrow--next') : null;
+        const dots = nav ? nav.querySelectorAll('.quotes__dot') : [];
+
+        // Get card width including gap
+        function getScrollAmount() {
+            const card = track.querySelector('.quote-card');
+            if (!card) return 0;
+            const style = getComputedStyle(track);
+            const gap = parseFloat(style.gap) || 16;
+            const isMobile = window.innerWidth <= 768;
+            // On mobile scroll 1 card, on desktop scroll 2 cards
+            return isMobile ? card.offsetWidth + gap : (card.offsetWidth + gap) * 2;
+        }
+
+        // Get current page based on scroll position
+        function getCurrentPage() {
+            const scrollAmount = getScrollAmount();
+            if (scrollAmount === 0) return 0;
+            return Math.round(track.scrollLeft / scrollAmount);
+        }
+
+        // Update active dot and button states
+        function updateState() {
+            const currentPage = getCurrentPage();
+            const maxScroll = track.scrollWidth - track.clientWidth;
+
+            // Update dots
+            dots.forEach(function(dot, index) {
+                dot.classList.toggle('is-active', index === currentPage);
+            });
+
+            // Update button states
+            if (prevBtn) {
+                prevBtn.disabled = track.scrollLeft <= 0;
+            }
+            if (nextBtn) {
+                nextBtn.disabled = track.scrollLeft >= maxScroll - 5; // 5px tolerance
+            }
+        }
+
+        // Scroll to specific page
+        function scrollToPage(page) {
+            const scrollAmount = getScrollAmount();
+            track.scrollTo({
+                left: page * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+        // Previous button
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function() {
+                const currentPage = getCurrentPage();
+                if (currentPage > 0) {
+                    scrollToPage(currentPage - 1);
+                }
+            });
+        }
+
+        // Next button
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                const currentPage = getCurrentPage();
+                const maxPage = dots.length - 1;
+                if (currentPage < maxPage) {
+                    scrollToPage(currentPage + 1);
+                }
+            });
+        }
+
+        // Dot navigation
+        dots.forEach(function(dot) {
+            dot.addEventListener('click', function() {
+                const page = parseInt(this.dataset.page, 10);
+                scrollToPage(page);
+            });
+        });
+
+        // Update state on scroll
+        let scrollTimeout;
+        track.addEventListener('scroll', function() {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(updateState, 50);
+        }, { passive: true });
+
+        // Update on resize
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateState, 100);
+        }, { passive: true });
+
+        // Initial state
+        updateState();
+    }
+
+    /**
      * Initialize all components
      */
     function init() {
@@ -253,6 +361,7 @@
         initHeaderScroll();
         initScrollAnimations();
         initEmailModal();
+        initQuotesCarousel();
     }
 
     // Run on DOM ready
