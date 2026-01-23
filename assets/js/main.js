@@ -256,7 +256,20 @@
 
         const prevBtn = nav ? nav.querySelector('.quotes__arrow--prev') : null;
         const nextBtn = nav ? nav.querySelector('.quotes__arrow--next') : null;
-        const dots = nav ? nav.querySelectorAll('.quotes__dot') : [];
+        const dotsContainer = nav ? nav.querySelector('.quotes__dots') : null;
+        const totalQuotes = nav ? parseInt(nav.dataset.totalQuotes, 10) : 0;
+
+        let currentDotCount = 0;
+
+        // Check if mobile
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        // Get cards per page based on viewport
+        function getCardsPerPage() {
+            return isMobile() ? 1 : 2;
+        }
 
         // Get card width including gap
         function getScrollAmount() {
@@ -264,9 +277,12 @@
             if (!card) return 0;
             const style = getComputedStyle(track);
             const gap = parseFloat(style.gap) || 16;
-            const isMobile = window.innerWidth <= 768;
-            // On mobile scroll 1 card, on desktop scroll 2 cards
-            return isMobile ? card.offsetWidth + gap : (card.offsetWidth + gap) * 2;
+            return (card.offsetWidth + gap) * getCardsPerPage();
+        }
+
+        // Get total pages
+        function getTotalPages() {
+            return Math.ceil(totalQuotes / getCardsPerPage());
         }
 
         // Get current page based on scroll position
@@ -276,12 +292,36 @@
             return Math.round(track.scrollLeft / scrollAmount);
         }
 
+        // Generate dots based on viewport
+        function generateDots() {
+            if (!dotsContainer) return;
+
+            const totalPages = getTotalPages();
+            if (totalPages === currentDotCount) return; // No change needed
+
+            currentDotCount = totalPages;
+            dotsContainer.innerHTML = '';
+
+            for (let i = 0; i < totalPages; i++) {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = 'quotes__dot' + (i === 0 ? ' is-active' : '');
+                dot.dataset.page = i;
+                dot.setAttribute('aria-label', 'Go to page ' + (i + 1));
+                dot.addEventListener('click', function() {
+                    scrollToPage(parseInt(this.dataset.page, 10));
+                });
+                dotsContainer.appendChild(dot);
+            }
+        }
+
         // Update active dot and button states
         function updateState() {
             const currentPage = getCurrentPage();
             const maxScroll = track.scrollWidth - track.clientWidth;
 
             // Update dots
+            const dots = dotsContainer ? dotsContainer.querySelectorAll('.quotes__dot') : [];
             dots.forEach(function(dot, index) {
                 dot.classList.toggle('is-active', index === currentPage);
             });
@@ -291,6 +331,7 @@
                 prevBtn.disabled = track.scrollLeft <= 0;
             }
             if (nextBtn) {
+                const dots = dotsContainer ? dotsContainer.querySelectorAll('.quotes__dot') : [];
                 nextBtn.disabled = track.scrollLeft >= maxScroll - 5; // 5px tolerance
             }
         }
@@ -318,20 +359,12 @@
         if (nextBtn) {
             nextBtn.addEventListener('click', function() {
                 const currentPage = getCurrentPage();
-                const maxPage = dots.length - 1;
+                const maxPage = getTotalPages() - 1;
                 if (currentPage < maxPage) {
                     scrollToPage(currentPage + 1);
                 }
             });
         }
-
-        // Dot navigation
-        dots.forEach(function(dot) {
-            dot.addEventListener('click', function() {
-                const page = parseInt(this.dataset.page, 10);
-                scrollToPage(page);
-            });
-        });
 
         // Update state on scroll
         let scrollTimeout;
@@ -340,14 +373,18 @@
             scrollTimeout = setTimeout(updateState, 50);
         }, { passive: true });
 
-        // Update on resize
+        // Update on resize (regenerate dots if needed)
         let resizeTimeout;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(updateState, 100);
+            resizeTimeout = setTimeout(function() {
+                generateDots();
+                updateState();
+            }, 100);
         }, { passive: true });
 
-        // Initial state
+        // Initial setup
+        generateDots();
         updateState();
     }
 

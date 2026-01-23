@@ -578,9 +578,7 @@ img {
    ========================================================================== */
 
 .quotes {
-    margin-top: var(--spacing-xl);
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin-top: var(--spacing-md);
     position: relative;
 }
 
@@ -740,14 +738,8 @@ img {
         font-size: 0.9375rem;
     }
 
+    /* Hide arrows on mobile - swipe + dots is primary interaction */
     .quotes__arrow {
-        width: 32px;
-        height: 32px;
-        font-size: 1rem;
-    }
-
-    /* Hide dots on mobile - swipe is primary interaction */
-    .quotes__dots {
         display: none;
     }
 }

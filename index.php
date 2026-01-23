@@ -267,16 +267,9 @@ if ( $hero_video_enable && $hero_video_url ) {
                 </div>
             </div>
             <?php if ( $quote_count > 2 ) : ?>
-            <nav class="quotes__nav" aria-label="<?php esc_attr_e( 'Quote navigation', '3to5' ); ?>">
+            <nav class="quotes__nav" aria-label="<?php esc_attr_e( 'Quote navigation', '3to5' ); ?>" data-total-quotes="<?php echo esc_attr( $quote_count ); ?>">
                 <button type="button" class="quotes__arrow quotes__arrow--prev" aria-label="<?php esc_attr_e( 'Previous quotes', '3to5' ); ?>">&#8249;</button>
-                <div class="quotes__dots">
-                    <?php
-                    $total_pages = ceil( $quote_count / 2 );
-                    for ( $i = 0; $i < $total_pages; $i++ ) :
-                    ?>
-                        <button type="button" class="quotes__dot<?php echo 0 === $i ? ' is-active' : ''; ?>" data-page="<?php echo esc_attr( $i ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Go to page %d', '3to5' ), $i + 1 ) ); ?>"></button>
-                    <?php endfor; ?>
-                </div>
+                <div class="quotes__dots"></div>
                 <button type="button" class="quotes__arrow quotes__arrow--next" aria-label="<?php esc_attr_e( 'Next quotes', '3to5' ); ?>">&#8250;</button>
             </nav>
             <?php endif; ?>
