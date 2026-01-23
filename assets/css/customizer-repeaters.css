@@ -1,40 +1,35 @@
 /**
  * 3 to 5 Theme - Customizer Repeater Styles
  *
- * Styles for FAQ and Locations repeater controls.
+ * Shared styles for all repeater controls (FAQ, Locations, Quotes).
  *
  * @package 3to5
  */
 
 /* =========================================================================
-   Shared Repeater Styles (FAQ & Locations)
+   Base Repeater Styles
    ========================================================================= */
 
-.faq-repeater-control,
-.locations-repeater-control {
+.repeater-control {
     margin-top: 10px;
 }
 
-.faq-repeater-items,
-.locations-repeater-items {
+.repeater-items {
     margin-bottom: 10px;
 }
 
-.faq-repeater-item,
-.locations-repeater-item {
+.repeater-item {
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 3px;
     margin-bottom: 8px;
 }
 
-.faq-repeater-item:last-child,
-.locations-repeater-item:last-child {
+.repeater-item:last-child {
     margin-bottom: 0;
 }
 
-.faq-repeater-item-header,
-.locations-repeater-item-header {
+.repeater-item-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -44,13 +39,11 @@
     border-bottom: 1px solid transparent;
 }
 
-.faq-repeater-item.ui-sortable-helper .faq-repeater-item-header,
-.locations-repeater-item.ui-sortable-helper .locations-repeater-item-header {
+.repeater-item.ui-sortable-helper .repeater-item-header {
     background: #e8e8e8;
 }
 
-.faq-repeater-item-title,
-.locations-repeater-item-title {
+.repeater-item-title {
     flex: 1;
     font-weight: 500;
     overflow: hidden;
@@ -59,8 +52,7 @@
     margin-right: 10px;
 }
 
-.faq-repeater-toggle,
-.locations-repeater-toggle {
+.repeater-toggle {
     background: none;
     border: none;
     cursor: pointer;
@@ -71,34 +63,28 @@
     justify-content: center;
 }
 
-.faq-repeater-toggle:hover,
-.locations-repeater-toggle:hover {
+.repeater-toggle:hover {
     color: #0073aa;
 }
 
-.faq-repeater-toggle:focus,
-.locations-repeater-toggle:focus {
+.repeater-toggle:focus {
     outline: 1px dotted #0073aa;
 }
 
-.faq-repeater-item-content,
-.locations-repeater-item-content {
+.repeater-item-content {
     padding: 12px;
     border-top: 1px solid #ddd;
 }
 
-.faq-repeater-item-content p,
-.locations-repeater-item-content p {
+.repeater-item-content p {
     margin: 0 0 12px;
 }
 
-.faq-repeater-item-content p:last-child,
-.locations-repeater-item-content p:last-child {
+.repeater-item-content p:last-child {
     margin-bottom: 0;
 }
 
-.faq-repeater-item-content label,
-.locations-repeater-item-content label {
+.repeater-item-content label {
     display: block;
     font-weight: 500;
     margin-bottom: 4px;
@@ -106,47 +92,39 @@
     color: #555;
 }
 
-.faq-repeater-item-content input,
-.faq-repeater-item-content textarea,
-.locations-repeater-item-content input,
-.locations-repeater-item-content textarea {
+.repeater-item-content input,
+.repeater-item-content textarea {
     width: 100%;
 }
 
-.faq-repeater-item-content textarea,
-.locations-repeater-item-content textarea {
+.repeater-item-content textarea {
     resize: vertical;
     min-height: 80px;
 }
 
-.faq-repeater-item-actions,
-.locations-repeater-item-actions {
+.repeater-item-actions {
     text-align: right;
     padding-top: 8px;
     border-top: 1px solid #eee;
     margin-top: 12px !important;
 }
 
-.faq-repeater-remove,
-.locations-repeater-remove {
+.repeater-remove {
     color: #a00;
 }
 
-.faq-repeater-remove:hover,
-.locations-repeater-remove:hover {
+.repeater-remove:hover {
     color: #dc3232;
     border-color: #dc3232;
 }
 
-.faq-repeater-add,
-.locations-repeater-add {
+.repeater-add {
     width: 100%;
     text-align: center;
     margin-top: 10px;
 }
 
-.faq-repeater-placeholder,
-.locations-repeater-placeholder {
+.repeater-placeholder {
     background: #f0f6fc;
     border: 2px dashed #0073aa;
     border-radius: 3px;
@@ -155,7 +133,6 @@
 }
 
 /* Sortable helper styling */
-.faq-repeater-item.ui-sortable-helper,
-.locations-repeater-item.ui-sortable-helper {
+.repeater-item.ui-sortable-helper {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }

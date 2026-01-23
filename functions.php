@@ -64,7 +64,7 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
                 $faqs = array();
             }
             ?>
-            <div class="faq-repeater-control">
+            <div class="repeater-control" data-repeater-type="faq">
                 <?php if ( ! empty( $this->label ) ) : ?>
                     <span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
                 <?php endif; ?>
@@ -72,36 +72,125 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
                     <span class="description customize-control-description"><?php echo esc_html( $this->description ); ?></span>
                 <?php endif; ?>
 
-                <input type="hidden" class="faq-repeater-value" <?php $this->link(); ?> value="<?php echo esc_attr( wp_json_encode( $faqs ) ); ?>">
+                <input type="hidden" class="repeater-value" <?php $this->link(); ?> value="<?php echo esc_attr( wp_json_encode( $faqs ) ); ?>">
 
-                <div class="faq-repeater-items" data-setting-id="<?php echo esc_attr( $this->id ); ?>">
+                <div class="repeater-items" data-setting-id="<?php echo esc_attr( $this->id ); ?>">
                     <?php foreach ( $faqs as $index => $faq ) : ?>
-                        <div class="faq-repeater-item" data-index="<?php echo esc_attr( $index ); ?>">
-                            <div class="faq-repeater-item-header">
-                                <span class="faq-repeater-item-title"><?php echo esc_html( ! empty( $faq['question'] ) ? $faq['question'] : __( 'New FAQ', '3to5' ) ); ?></span>
-                                <button type="button" class="faq-repeater-toggle" aria-expanded="false">
+                        <div class="repeater-item" data-index="<?php echo esc_attr( $index ); ?>">
+                            <div class="repeater-item-header">
+                                <span class="repeater-item-title"><?php echo esc_html( ! empty( $faq['question'] ) ? $faq['question'] : __( 'New FAQ', '3to5' ) ); ?></span>
+                                <button type="button" class="repeater-toggle" aria-expanded="false">
                                     <span class="screen-reader-text"><?php esc_html_e( 'Toggle', '3to5' ); ?></span>
                                     <span class="dashicons dashicons-arrow-down-alt2"></span>
                                 </button>
                             </div>
-                            <div class="faq-repeater-item-content" style="display: none;">
+                            <div class="repeater-item-content" style="display: none;">
                                 <p>
                                     <label><?php esc_html_e( 'Question', '3to5' ); ?></label>
-                                    <input type="text" class="faq-question widefat" value="<?php echo esc_attr( $faq['question'] ?? '' ); ?>">
+                                    <input type="text" class="repeater-field-question widefat" value="<?php echo esc_attr( $faq['question'] ?? '' ); ?>">
                                 </p>
                                 <p>
                                     <label><?php esc_html_e( 'Answer', '3to5' ); ?></label>
-                                    <textarea class="faq-answer widefat" rows="4"><?php echo esc_textarea( $faq['answer'] ?? '' ); ?></textarea>
+                                    <textarea class="repeater-field-answer widefat" rows="4"><?php echo esc_textarea( $faq['answer'] ?? '' ); ?></textarea>
                                 </p>
-                                <p class="faq-repeater-item-actions">
-                                    <button type="button" class="button faq-repeater-remove"><?php esc_html_e( 'Remove', '3to5' ); ?></button>
+                                <p class="repeater-item-actions">
+                                    <button type="button" class="button repeater-remove"><?php esc_html_e( 'Remove', '3to5' ); ?></button>
                                 </p>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
 
-                <button type="button" class="button faq-repeater-add"><?php esc_html_e( 'Add FAQ', '3to5' ); ?></button>
+                <button type="button" class="button repeater-add"><?php esc_html_e( 'Add FAQ', '3to5' ); ?></button>
+            </div>
+            <?php
+        }
+    }
+
+    /**
+     * Custom Control: Quotes Repeater
+     */
+    class Three_To_Five_Quotes_Repeater_Control extends WP_Customize_Control {
+        /**
+         * Control type
+         *
+         * @var string
+         */
+        public $type = 'quotes_repeater';
+
+        /**
+         * Enqueue scripts and styles
+         */
+        public function enqueue() {
+            wp_enqueue_script(
+                '3to5-customizer-repeaters',
+                THREE_TO_FIVE_URI . '/assets/js/customizer-repeaters.js',
+                array( 'jquery', 'customize-controls', 'jquery-ui-sortable' ),
+                THREE_TO_FIVE_VERSION,
+                true
+            );
+            wp_enqueue_style(
+                '3to5-customizer-repeaters',
+                THREE_TO_FIVE_URI . '/assets/css/customizer-repeaters.css',
+                array(),
+                THREE_TO_FIVE_VERSION
+            );
+        }
+
+        /**
+         * Render the control content
+         */
+        public function render_content() {
+            $quotes = $this->value();
+            if ( ! is_array( $quotes ) ) {
+                $quotes = json_decode( $quotes, true );
+            }
+            if ( ! is_array( $quotes ) ) {
+                $quotes = array();
+            }
+            ?>
+            <div class="repeater-control" data-repeater-type="quotes">
+                <?php if ( ! empty( $this->label ) ) : ?>
+                    <span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
+                <?php endif; ?>
+                <?php if ( ! empty( $this->description ) ) : ?>
+                    <span class="description customize-control-description"><?php echo esc_html( $this->description ); ?></span>
+                <?php endif; ?>
+
+                <input type="hidden" class="repeater-value" <?php $this->link(); ?> value="<?php echo esc_attr( wp_json_encode( $quotes ) ); ?>">
+
+                <div class="repeater-items" data-setting-id="<?php echo esc_attr( $this->id ); ?>">
+                    <?php foreach ( $quotes as $index => $quote ) : ?>
+                        <div class="repeater-item" data-index="<?php echo esc_attr( $index ); ?>">
+                            <div class="repeater-item-header">
+                                <span class="repeater-item-title"><?php echo esc_html( ! empty( $quote['author'] ) ? $quote['author'] : __( 'New Quote', '3to5' ) ); ?></span>
+                                <button type="button" class="repeater-toggle" aria-expanded="false">
+                                    <span class="screen-reader-text"><?php esc_html_e( 'Toggle', '3to5' ); ?></span>
+                                    <span class="dashicons dashicons-arrow-down-alt2"></span>
+                                </button>
+                            </div>
+                            <div class="repeater-item-content" style="display: none;">
+                                <p>
+                                    <label><?php esc_html_e( 'Quote Text', '3to5' ); ?></label>
+                                    <textarea class="repeater-field-text widefat" rows="3"><?php echo esc_textarea( $quote['text'] ?? '' ); ?></textarea>
+                                </p>
+                                <p>
+                                    <label><?php esc_html_e( 'Author Name', '3to5' ); ?></label>
+                                    <input type="text" class="repeater-field-author widefat" value="<?php echo esc_attr( $quote['author'] ?? '' ); ?>">
+                                </p>
+                                <p>
+                                    <label><?php esc_html_e( 'Author Title/Role (optional)', '3to5' ); ?></label>
+                                    <input type="text" class="repeater-field-title widefat" value="<?php echo esc_attr( $quote['title'] ?? '' ); ?>">
+                                </p>
+                                <p class="repeater-item-actions">
+                                    <button type="button" class="button repeater-remove"><?php esc_html_e( 'Remove', '3to5' ); ?></button>
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <button type="button" class="button repeater-add"><?php esc_html_e( 'Add Quote', '3to5' ); ?></button>
             </div>
             <?php
         }
@@ -149,7 +238,7 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
                 $locations = array();
             }
             ?>
-            <div class="locations-repeater-control">
+            <div class="repeater-control" data-repeater-type="locations">
                 <?php if ( ! empty( $this->label ) ) : ?>
                     <span class="customize-control-title"><?php echo esc_html( $this->label ); ?></span>
                 <?php endif; ?>
@@ -157,40 +246,40 @@ if ( class_exists( 'WP_Customize_Control' ) ) {
                     <span class="description customize-control-description"><?php echo esc_html( $this->description ); ?></span>
                 <?php endif; ?>
 
-                <input type="hidden" class="locations-repeater-value" <?php $this->link(); ?> value="<?php echo esc_attr( wp_json_encode( $locations ) ); ?>">
+                <input type="hidden" class="repeater-value" <?php $this->link(); ?> value="<?php echo esc_attr( wp_json_encode( $locations ) ); ?>">
 
-                <div class="locations-repeater-items" data-setting-id="<?php echo esc_attr( $this->id ); ?>">
+                <div class="repeater-items" data-setting-id="<?php echo esc_attr( $this->id ); ?>">
                     <?php foreach ( $locations as $index => $location ) : ?>
-                        <div class="locations-repeater-item" data-index="<?php echo esc_attr( $index ); ?>">
-                            <div class="locations-repeater-item-header">
-                                <span class="locations-repeater-item-title"><?php echo esc_html( ! empty( $location['name'] ) ? $location['name'] : __( 'New Location', '3to5' ) ); ?></span>
-                                <button type="button" class="locations-repeater-toggle" aria-expanded="false">
+                        <div class="repeater-item" data-index="<?php echo esc_attr( $index ); ?>">
+                            <div class="repeater-item-header">
+                                <span class="repeater-item-title"><?php echo esc_html( ! empty( $location['name'] ) ? $location['name'] : __( 'New Location', '3to5' ) ); ?></span>
+                                <button type="button" class="repeater-toggle" aria-expanded="false">
                                     <span class="screen-reader-text"><?php esc_html_e( 'Toggle', '3to5' ); ?></span>
                                     <span class="dashicons dashicons-arrow-down-alt2"></span>
                                 </button>
                             </div>
-                            <div class="locations-repeater-item-content" style="display: none;">
+                            <div class="repeater-item-content" style="display: none;">
                                 <p>
                                     <label><?php esc_html_e( 'Name', '3to5' ); ?></label>
-                                    <input type="text" class="location-name widefat" value="<?php echo esc_attr( $location['name'] ?? '' ); ?>">
+                                    <input type="text" class="repeater-field-name widefat" value="<?php echo esc_attr( $location['name'] ?? '' ); ?>">
                                 </p>
                                 <p>
                                     <label><?php esc_html_e( 'Address', '3to5' ); ?></label>
-                                    <input type="text" class="location-address widefat" value="<?php echo esc_attr( $location['address'] ?? '' ); ?>">
+                                    <input type="text" class="repeater-field-address widefat" value="<?php echo esc_attr( $location['address'] ?? '' ); ?>">
                                 </p>
                                 <p>
                                     <label><?php esc_html_e( 'Hours', '3to5' ); ?></label>
-                                    <input type="text" class="location-hours widefat" value="<?php echo esc_attr( $location['hours'] ?? '' ); ?>">
+                                    <input type="text" class="repeater-field-hours widefat" value="<?php echo esc_attr( $location['hours'] ?? '' ); ?>">
                                 </p>
-                                <p class="locations-repeater-item-actions">
-                                    <button type="button" class="button locations-repeater-remove"><?php esc_html_e( 'Remove', '3to5' ); ?></button>
+                                <p class="repeater-item-actions">
+                                    <button type="button" class="button repeater-remove"><?php esc_html_e( 'Remove', '3to5' ); ?></button>
                                 </p>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
 
-                <button type="button" class="button locations-repeater-add"><?php esc_html_e( 'Add Location', '3to5' ); ?></button>
+                <button type="button" class="button repeater-add"><?php esc_html_e( 'Add Location', '3to5' ); ?></button>
             </div>
             <?php
         }
@@ -749,8 +838,8 @@ function three_to_five_customize_register( $wp_customize ) {
         ),
     ) );
 
-    // Reasons (up to 4)
-    for ( $i = 1; $i <= 4; $i++ ) {
+    // Reasons (up to 3)
+    for ( $i = 1; $i <= 3; $i++ ) {
         $wp_customize->add_setting( "3to5_reason_{$i}_title", array(
             'default'           => '',
             'sanitize_callback' => 'sanitize_text_field',
@@ -799,9 +888,27 @@ function three_to_five_customize_register( $wp_customize ) {
     $wp_customize->get_setting( '3to5_reason_3_text' )->default = __( 'With more eyes on every decision, there is greater transparency and accountability in local government.', '3to5' );
     $wp_customize->get_setting( '3to5_reason_3_icon' )->default = '✅';
 
-    $wp_customize->get_setting( '3to5_reason_4_title' )->default = __( 'Stronger Community', '3to5' );
-    $wp_customize->get_setting( '3to5_reason_4_text' )->default = __( 'Better governance leads to better outcomes for roads, services, and quality of life for all residents.', '3to5' );
-    $wp_customize->get_setting( '3to5_reason_4_icon' )->default = '🏘️';
+    // =========================================================================
+    // Section: Quotes
+    // =========================================================================
+    $wp_customize->add_section( '3to5_quotes', array(
+        'title'       => __( 'Quotes Section', '3to5' ),
+        'description' => __( 'Add testimonials or quotes that appear below the reasons section.', '3to5' ),
+        'panel'       => '3to5_campaign',
+        'priority'    => 35,
+    ) );
+
+    // Quotes Repeater
+    $wp_customize->add_setting( '3to5_quote_items', array(
+        'default'           => '[]',
+        'sanitize_callback' => 'three_to_five_sanitize_quote_items',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new Three_To_Five_Quotes_Repeater_Control( $wp_customize, '3to5_quote_items', array(
+        'label'       => __( 'Quotes', '3to5' ),
+        'description' => __( 'Add quotes with attribution to display below the reasons.', '3to5' ),
+        'section'     => '3to5_quotes',
+    ) ) );
 
     // =========================================================================
     // Section: Take Action
@@ -1484,6 +1591,52 @@ function three_to_five_get_location_items() {
     }
 
     return $locations;
+}
+
+/**
+ * Sanitize quote items (JSON array)
+ */
+function three_to_five_sanitize_quote_items( $input ) {
+    if ( is_string( $input ) ) {
+        $input = json_decode( $input, true );
+    }
+
+    if ( ! is_array( $input ) ) {
+        return '[]';
+    }
+
+    $sanitized = array();
+    foreach ( $input as $item ) {
+        if ( ! is_array( $item ) ) {
+            continue;
+        }
+        $sanitized[] = array(
+            'text'   => isset( $item['text'] ) ? sanitize_textarea_field( $item['text'] ) : '',
+            'author' => isset( $item['author'] ) ? sanitize_text_field( $item['author'] ) : '',
+            'title'  => isset( $item['title'] ) ? sanitize_text_field( $item['title'] ) : '',
+        );
+    }
+
+    return wp_json_encode( $sanitized );
+}
+
+/**
+ * Get quote items as array
+ */
+function three_to_five_get_quote_items() {
+    $default_quotes = array();
+
+    $quotes = get_theme_mod( '3to5_quote_items', wp_json_encode( $default_quotes ) );
+
+    if ( is_string( $quotes ) ) {
+        $quotes = json_decode( $quotes, true );
+    }
+
+    if ( ! is_array( $quotes ) ) {
+        return $default_quotes;
+    }
+
+    return $quotes;
 }
 
 /**

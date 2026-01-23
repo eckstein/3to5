@@ -209,14 +209,9 @@ if ( $hero_video_enable && $hero_video_url ) {
                     'text'  => __( 'With more eyes on every decision, there is greater transparency and accountability in local government.', '3to5' ),
                     'icon'  => '✅',
                 ),
-                4 => array(
-                    'title' => __( 'Stronger Community', '3to5' ),
-                    'text'  => __( 'Better governance leads to better outcomes for roads, services, and quality of life for all residents.', '3to5' ),
-                    'icon'  => '🏘️',
-                ),
             );
 
-            for ( $i = 1; $i <= 4; $i++ ) :
+            for ( $i = 1; $i <= 3; $i++ ) :
                 $title = get_theme_mod( "3to5_reason_{$i}_title", $default_reasons[ $i ]['title'] );
                 $text  = get_theme_mod( "3to5_reason_{$i}_text", $default_reasons[ $i ]['text'] );
                 $icon  = get_theme_mod( "3to5_reason_{$i}_icon", $default_reasons[ $i ]['icon'] );
@@ -237,6 +232,42 @@ if ( $hero_video_enable && $hero_video_url ) {
             endfor;
             ?>
         </div>
+
+        <?php // Quotes subsection ?>
+        <?php
+        $quote_items = three_to_five_get_quote_items();
+        $has_quotes = false;
+        foreach ( $quote_items as $quote ) {
+            if ( ! empty( $quote['text'] ) ) {
+                $has_quotes = true;
+                break;
+            }
+        }
+        if ( $has_quotes ) :
+        ?>
+        <div class="quotes">
+            <div class="quotes__list">
+                <?php foreach ( $quote_items as $index => $quote ) :
+                    if ( ! empty( $quote['text'] ) ) :
+                ?>
+                    <blockquote class="quote-card" data-quote-index="<?php echo esc_attr( $index ); ?>">
+                        <p class="quote-card__text"><?php echo esc_html( $quote['text'] ); ?></p>
+                        <?php if ( ! empty( $quote['author'] ) ) : ?>
+                            <footer class="quote-card__footer">
+                                <cite class="quote-card__author"><?php echo esc_html( $quote['author'] ); ?></cite>
+                                <?php if ( ! empty( $quote['title'] ) ) : ?>
+                                    <span class="quote-card__title"><?php echo esc_html( $quote['title'] ); ?></span>
+                                <?php endif; ?>
+                            </footer>
+                        <?php endif; ?>
+                    </blockquote>
+                <?php
+                    endif;
+                endforeach;
+                ?>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 <?php endif; ?>
